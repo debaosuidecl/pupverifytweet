@@ -16,6 +16,10 @@ const VerifiedUserSchema = new mongoose.Schema({
   outlookpwd: {
     type: String,
     required: true
+  },
+  phone: {
+    type: String
+    // required: true
   }
 });
 

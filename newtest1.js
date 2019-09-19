@@ -4,7 +4,8 @@ const UserData = require('./models/UserData');
 const VerifiedUserData = require('./models/VerifiedUserData');
 const mongoose = require('mongoose');
 const connectDB = require('./config/db.js');
-// const puppeteer = require('puppeteer-extra');
+
+var random_useragent = require('random-useragent');
 
 // const router = express.Router();
 const poll = require('promise-poller').default;
@@ -15,23 +16,23 @@ const fs = require('fs-extra');
 
 const apiKey = '4fb64740ffa4b745aa944719725acafa';
 const request = require('request-promise-native');
-// var USER_AGENT = random_useragent.getRandom(function(ua) {
-//   return parseFloat(ua.browserVersion) >= 50 && ua.osName == 'Windows';
-// });
-// console.log(USER_AGENT, 'USER');
+var USER_AGENT = random_useragent.getRandom(function(ua) {
+  return parseFloat(ua.browserVersion) >= 50 && ua.osName == 'Windows';
+});
+console.log(USER_AGENT, 'USER');
 
 const returnRandom = () => {
   return Math.floor(Math.random() * 7000) + 3000;
 };
 
 const prepareForTest = async page => {
-  await page.authenticate({
-    username: 'yvdjabhs-rotate',
-    password: 'neokz9hv29hq'
-  });
+  // await page.authenticate({
+  //   username: 'yvdjabhs-rotate',
+  //   password: 'neokz9hv29hq'
+  // });
 
   await page.setUserAgent(
-    `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3419.0 Safari/537.36`
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
   );
   await page.evaluateOnNewDocument(() => {
     Object.defineProperty(navigator, 'webdriver', {
@@ -55,63 +56,12 @@ function shuffle(array) {
 
 // const pluginProxy = require('puppeteer-extra-plugin-proxy');
 // add proxy plugin without proxy crendentials
-const proxies = [
-  10880,
-  10881,
-  10882,
-  10883,
-  10884,
-  10885,
-  10886,
-  10887,
-  10888,
-  10889,
-  10890,
-  10891,
-  10892,
-  10893,
-  10894,
-  10895,
-  10896,
-  10897,
-  10898,
-  10899,
-  10900,
-  10901,
-  10902,
-  10903,
-  10904
-];
+
+const proxies = [3731, 3732, 3733, 3734, 3735, 3736, 3737, 3738, 3739, 3740];
 
 // get randomized indexes with shuffle
 
-let shuffler = shuffle([
-  0,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  16,
-  17,
-  18,
-  19,
-  20,
-  21,
-  22,
-  23,
-  24
-]);
+let shuffler = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
 const siteDetails = {
   // sitekey: '6LdjXQkTAAAAADFGRY5gVKtvhGvh8B2eF3oc-Y4E',
@@ -147,6 +97,7 @@ async function pollForRequestResults(
     retries
   });
 }
+
 function requestCaptchaResults(apiKey, requestId) {
   const url = `http://2captcha.com/res.php?key=${apiKey}&action=get&id=${requestId}&json=1`;
   return async function() {
@@ -179,20 +130,19 @@ const myFunc = async emails => {
     for (let numBrowser = 0; numBrowser < NUM_BROWSERS; numBrowser++) {
       promisesBrowsers.push(
         new Promise(async resBrowser => {
-          const oldProxyUrl = `http://62.210.169.37:${
+          const oldProxyUrl = `http://51.15.13.159:${
             proxies[shuffler[numBrowser]]
           }`;
           console.log(proxies[shuffler[numBrowser]]);
           const browser = await puppeteer.launch({
-            headless: true,
+            headless: false,
             ignoreHTTPSErrors: true,
             ignoreDefaultArgs: ['--enable-automation'],
             args: [
               `-no-sandbox`,
-
               '-disable-setuid-sandbox',
-              // `--proxy-server=${oldProxyUrl}`
-              `--proxy-server=p.webshare.io:80`
+              `--proxy-server=${oldProxyUrl}`
+              // `--proxy-server=p.webshare.io:80`
             ],
             slowMo: 70
           });
@@ -201,17 +151,6 @@ const myFunc = async emails => {
           for (let numPage = 0; numPage < NUM_PAGES; numPage++) {
             promisesPages.push(
               new Promise(async resPage => {
-                //now
-
-                // let t = setTimeout(async () => {
-                //   console.log('taking too long');
-                //   try {
-                //     await browser.close();
-                //     await page.waitForSelector('blah');
-                //   } finally {
-                //     throw Error('cannot find');
-                //   }
-                // }, 450000);
                 const { email, twitterpassword, outlookpwd, _id } = emails[
                   numBrowser
                 ];
@@ -222,10 +161,11 @@ const myFunc = async emails => {
                   numBrowser,
                   _id
                 );
-                // return;
+                let save = false;
+                let phone = '';
                 try {
                   const page = await browser.newPage();
-
+                  await page.setDefaultNavigationTimeout(60000);
                   // await page.goto('http://lumtest.com/myip.json');
                   // return;
                   await prepareForTest(page);
@@ -250,7 +190,7 @@ const myFunc = async emails => {
                       `#email_challenge_submit`
                     );
                     console.log(confirmationChallengeBtn, 'the confirmation');
-
+                    // return;
                     const page2 = await browser.newPage();
                     await page2.setDefaultNavigationTimeout(90000);
                     await prepareForTest(page2);
@@ -312,6 +252,7 @@ const myFunc = async emails => {
                         `[title="verify@twitter.com"]`
                       );
                       const confirmationSubject = twitterSubjects[0];
+                      await confirmationSubject.click();
                       await confirmationSubject.click();
 
                       await page3.waitForSelector(`td.x_support > strong`);
@@ -402,9 +343,9 @@ const myFunc = async emails => {
                           requestId
                         );
                         console.log(response);
-                        await page.evaluate(
-                          `document.getElementById("g-recaptcha-response").innerHTML="${response}";`
-                        );
+                        // await page.evaluate(
+                        //   `document.getElementById("g-recaptcha-response").innerHTML="${response}";`
+                        // );
                         await page.evaluate(
                           `document.querySelector("[value='Continue']").style.display = "block"`
                         );
@@ -426,9 +367,9 @@ const myFunc = async emails => {
                           requestId
                         );
                         console.log(response);
-                        await page.evaluate(
-                          `document.getElementById("g-recaptcha-response").innerHTML="${response}";`
-                        );
+                        // await page.evaluate(
+                        //   `document.getElementById("g-recaptcha-response").innerHTML="${response}";`
+                        // );
                         await page.evaluate(
                           `document.querySelector("[value='Continue']").style.display = "block"`
                         );
@@ -447,7 +388,7 @@ const myFunc = async emails => {
                     }
 
                     console.log("let's check for phone verification");
-                    let phone = '';
+                    // let phone = '';
                     try {
                       await page.waitForSelector(`#phone_number`);
 
@@ -463,6 +404,20 @@ const myFunc = async emails => {
                         console.log('no phone number received');
                       }
                       // save phone in database may not be an option, since it is temporary.
+                      const myemail = new VerifiedUserData({
+                        email: email,
+                        twitterpassword: twitterpassword,
+                        outlookpwd: outlookpwd,
+                        phone: phone
+                      });
+                      let newemail = await myemail.save();
+                      console.log(newemail);
+                      console.log('yes e don enter');
+                      console.log('you have no excuse please');
+                      console.log('I beg of you do this for me');
+                      await UserData.findOneAndRemove({ _id: _id });
+                      console.log(newemail, ' is deleted');
+
                       await page.type(`#phone_number`, phone);
                       console.log(phone);
                       console.log('typed');
@@ -536,39 +491,13 @@ const myFunc = async emails => {
 
                       await page.type('#code', verCode);
                       await page.click(`[type="submit"]`);
-                      try {
-                        console.log('saving user to verified collection');
-                        let verifiedUser = new VerifiedUserData({
-                          email,
-                          twitterpassword,
-                          outlookpwd
-                        });
-                        const newUser = await verifiedUser.save();
-                        console.log(newUser, 'data saved');
-                        console.log('deleting user from unverified collection');
-                        await UserData.findOneAndRemove({ _id: _id });
-                        console.log(newUser, ' is deleted');
-                      } catch (error) {
-                        console.log(
-                          error,
-                          'mild error occured saving user to verified collection again'
-                        );
-                        let verifiedUser = new VerifiedUserData({
-                          email,
-                          twitterpassword,
-                          outlookpwd
-                        });
-                        const newUser = await verifiedUser.save();
-                        console.log(newUser, 'data saved');
-                        console.log(
-                          'deleting user from unverified collection again'
-                        );
-                        await UserData.findOneAndRemove({ _id: _id });
-                        console.log(newUser, ' is deleted');
-                      }
 
                       await page.waitFor(10000);
                       await page.click(`[type="submit"]`);
+                      console.log('saving user to verified collection');
+                      // connectDB();
+
+                      await page.waitFor(20000);
                     }
                   } catch (error) {
                     console.log('probably did not see access');
@@ -580,7 +509,19 @@ const myFunc = async emails => {
                   // clearTimeout(t);
                   console.log('timeout has been cleared');
                 } finally {
-                  await browser.close();
+                  // if (save) {
+                  //   let verifiedUser = new VerifiedUserData({
+                  //     email,
+                  //     twitterpassword,
+                  //     outlookpwd,
+                  //     phone
+                  //   });
+                  //   // await verifiedUser.markModified()
+                  //   const newUser = await verifiedUser.save();
+                  //   console.log(newUser, 'data saved');
+                  //   console.log('deleting user from unverified collection');
+                  // }
+                  // await browser.close();
                   // console.log(`An error occured`);
                   // await page.close();
                   // await twitterpage.close();
@@ -602,6 +543,7 @@ const myFunc = async emails => {
     console.log(
       `Time elapsed ${Math.round((new Date().getTime() - startDate) / 1000)} s`
     );
+    process.exit(1);
 
     //
   })();
@@ -616,10 +558,13 @@ let runFunc = false;
 const shouldUpdateEmail = async () => {
   try {
     const emails = await UserData.find({})
-      .sort({ _id: -1 })
-      .limit(3);
+      .sort({ _id: 1 })
+      .limit(2);
     console.log(emails);
-    if (emails && emails.length > 1) {
+    const verifiedEmailsCount = await VerifiedUserData.countDocuments();
+    console.log('verified emails count is ', verifiedEmailsCount);
+    // console.log(emails);
+    if (emails && emails.length > 1 && verifiedEmailsCount < 12) {
       await myFunc(emails);
     } else {
       console.log('nothing to verify');
@@ -627,7 +572,7 @@ const shouldUpdateEmail = async () => {
     // console.log(emailLength, 'this is the email length');
     // return;
 
-    setTimeout(shouldUpdateEmail, 20000);
+    setTimeout(shouldUpdateEmail, 80000);
     // console.log(response);
     //
   } catch (error) {
@@ -642,5 +587,5 @@ connectDB();
 app.listen(PORT, () => {
   console.log('listening on PORT ', PORT);
 
-  setTimeout(shouldUpdateEmail, 10000);
+  setTimeout(shouldUpdateEmail, 60000);
 });
