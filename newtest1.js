@@ -135,7 +135,7 @@ const myFunc = async emails => {
           }`;
           console.log(proxies[shuffler[numBrowser]]);
           const browser = await puppeteer.launch({
-            headless: false,
+            headless: true,
             ignoreHTTPSErrors: true,
             ignoreDefaultArgs: ['--enable-automation'],
             args: [
@@ -286,8 +286,9 @@ const myFunc = async emails => {
                     await page.waitForSelector(
                       `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
                     );
+
                     console.log(
-                      'seen tweet button already verified delete from unverified'
+                      'seen tweet button, slight issue we have to delete this record'
                     );
                     let verifiedUser = new VerifiedUserData({
                       email,
@@ -508,32 +509,14 @@ const myFunc = async emails => {
                   console.log(err);
                   // clearTimeout(t);
                   console.log('timeout has been cleared');
-                } finally {
-                  // if (save) {
-                  //   let verifiedUser = new VerifiedUserData({
-                  //     email,
-                  //     twitterpassword,
-                  //     outlookpwd,
-                  //     phone
-                  //   });
-                  //   // await verifiedUser.markModified()
-                  //   const newUser = await verifiedUser.save();
-                  //   console.log(newUser, 'data saved');
-                  //   console.log('deleting user from unverified collection');
-                  // }
-                  // await browser.close();
-                  // console.log(`An error occured`);
-                  // await page.close();
-                  // await twitterpage.close();
                 }
-                // }
                 resPage();
               })
             );
           }
           await Promise.all(promisesPages);
 
-          // await browser.close();
+          await browser.close();
           resBrowser();
         })
       );
@@ -560,11 +543,11 @@ const shouldUpdateEmail = async () => {
     const emails = await UserData.find({})
       .sort({ _id: 1 })
       .limit(2);
-    console.log(emails);
+    // console.log(emails);
     const verifiedEmailsCount = await VerifiedUserData.countDocuments();
     console.log('verified emails count is ', verifiedEmailsCount);
     // console.log(emails);
-    if (emails && emails.length > 1 && verifiedEmailsCount < 12) {
+    if (emails && emails.length > 1 && verifiedEmailsCount < 10) {
       await myFunc(emails);
     } else {
       console.log('nothing to verify');

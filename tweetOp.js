@@ -1,21 +1,15 @@
 const express = require('express');
 const app = express();
-// const UserData = require('./models/UserData');
 const VerifiedUserData = require('./models/VerifiedUserData');
 const mongoose = require('mongoose');
 const connectDB = require('./config/db.js');
-// const socket = require("socket.io")
-var random_useragent = require('random-useragent');
-
 const puppeteer = require('puppeteer');
 const randomstring = require('randomstring');
 const fs = require('fs-extra');
 const fsOriginal = require('fs');
 const util = require('util');
 const readFile = util.promisify(fsOriginal.readFile);
-
-const apiKey = '4fb64740ffa4b745aa944719725acafa';
-const request = require('request-promise-native');
+let socket = require('socket.io');
 
 const returnRandom = () => {
   return Math.floor(Math.random() * 7000) + 3000;
@@ -31,7 +25,6 @@ const prepareForTest = async page => {
     });
   });
 };
-let socket = require('socket.io');
 
 function shuffle(array) {
   var i = array.length,
@@ -46,17 +39,9 @@ function shuffle(array) {
   return array;
 }
 
-// const pluginProxy = require('puppeteer-extra-plugin-proxy');
-// add proxy plugin without proxy crendentials
-
 const proxies = [3731, 3732, 3733, 3734, 3735, 3736, 3737, 3738, 3739, 3740];
 
-// get randomized indexes with shuffle
-
 let shuffler = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-
-//App Setup
-// let uuid = require('uuid');
 
 let PORT = 1000;
 
@@ -75,8 +60,8 @@ io.on('connection', socket => {
     let emails;
     try {
       emails = await VerifiedUserData.find({})
-        .sort({ _id: 1 })
-        .limit(2);
+        .sort({ _id: -1 })
+        .limit(10);
       console.log(emails);
     } catch (error) {
       console.log(error);
@@ -96,7 +81,7 @@ io.on('connection', socket => {
             }`;
             console.log(proxies[shuffler[numBrowser]]);
             const browser = await puppeteer.launch({
-              headless: false,
+              headless: true,
               ignoreHTTPSErrors: true,
               ignoreDefaultArgs: ['--enable-automation'],
               args: [
@@ -183,6 +168,10 @@ io.on('connection', socket => {
                       let retypePhoneIndicator = await page.waitForSelector(
                         `input[value="RetypePhoneNumber"]`
                       );
+                      await page.waitForSelector(`[name="challenge_response"]`);
+                      await page.type(`[name="challenge_response"]`, phone);
+                      // await page.type(`[name="challenge_response"]`, phone );
+                      await page.click(`[type="submit"]`);
                       // await page.type('#challenge_response', phone);
                     } catch (e) {
                       console.log(e, 'no phone number to retype');
@@ -285,6 +274,7 @@ io.on('connection', socket => {
                         `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
                       );
                       console.log('seen tweet button time to tweet');
+                      io.sockets.emit('seenTweetButton', 1);
                     } catch (error) {
                       console.log('no tweet button cannot go further');
                     }
@@ -349,6 +339,7 @@ io.on('connection', socket => {
                             );
                           } catch (e) {
                             console.log(e);
+                            io.sockets.emit('instanceError', 1);
                           }
                           let tweetLink = '';
                           try {
@@ -357,6 +348,7 @@ io.on('connection', socket => {
                             }, link);
                           } catch (error) {
                             console.log(error, 'not seen link');
+                            io.sockets.emit('instanceError', 1);
                           }
 
                           console.log(tweetLink, 'seen');
@@ -377,6 +369,8 @@ io.on('connection', socket => {
                             console.log(twitterLinkArray);
                             console.log('file saved');
                             console.log('done');
+                            io.sockets.emit('instanceError', 1);
+
                             await browser.close();
                           }
                           // await page.reload();
@@ -385,12 +379,15 @@ io.on('connection', socket => {
                     }
                   } catch (error) {
                     console.log(error);
+                    io.sockets.emit('instanceError', 1);
                   }
                   resPage();
                 })
               );
             }
             await Promise.all(promisesPages);
+            await browser.close();
+
             resBrowser();
           })
         );
