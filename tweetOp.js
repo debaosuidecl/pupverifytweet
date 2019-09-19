@@ -43,7 +43,7 @@ const proxies = [3731, 3732, 3733, 3734, 3735, 3736, 3737, 3738, 3739, 3740];
 
 let shuffler = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-let PORT = 1900;
+let PORT = 1000;
 
 let server = app.listen(PORT, function() {
   connectDB();
@@ -87,10 +87,7 @@ io.on('connection', socket => {
               args: [
                 `-no-sandbox`,
                 '-disable-setuid-sandbox',
-                // `--ignore-certificate-errors`,
-                // `--ignore-certificate-errors-spki-list`,
                 `--proxy-server=${oldProxyUrl}`
-                // `--proxy-server=p.webshare.io:80`
               ],
               slowMo: 70
             });
@@ -290,12 +287,13 @@ io.on('connection', socket => {
                     await page.waitForSelector(
                       `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
                     );
-                    const randomFileName = `tweetLink.csv`;
+                    // const randomFileName = `tweetLink.csv`;
 
-                    // await fs.writeFile(
-                    //   randomFileName,
-                    //   'originalLink,TweetLink\n'
-                    // );
+                    let date = new Date();
+                    let randomFileName = `tweetLink${date.getDay()}${date.getMonth()}${date.getFullYear()}.csv`;
+                    await fs.ensureFile(randomFileName);
+                    console.log('File ensured');
+
                     let compose = await page.$(
                       `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
                     );
@@ -357,7 +355,7 @@ io.on('connection', socket => {
                             randomFileName,
                             `"${word}","${tweetLink.substring(8, 30)}"\n`
                           );
-                          let csvData = await readFile('tweetlink.csv', {
+                          let csvData = await readFile(randomFileName, {
                             encoding: 'utf-8'
                           });
                           io.sockets.emit('tweetLinks', {
