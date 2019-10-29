@@ -281,7 +281,7 @@ io.on('connection', socket => {
                     // tweeting operation
                     // await page.mouse.click(300, 400);
                     await page.waitFor(2000);
-                    let numberOfRuns = 800;
+                    let numberOfRuns = 1000;
                     let twitterLinkArray = [];
                     const inputString = data.baseLink;
                     await page.waitForSelector(
