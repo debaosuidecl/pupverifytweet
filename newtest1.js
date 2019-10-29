@@ -57,7 +57,7 @@ function shuffle(array) {
 // const pluginProxy = require('puppeteer-extra-plugin-proxy');
 // add proxy plugin without proxy crendentials
 
-const proxies = [3731, 3732, 3733, 3734, 3735, 3736, 3737, 3738, 3739, 3740];
+const proxies = [7985, 7986, 7987, 7988, 7989, 7990, 7991, 7992, 7993, 7994];
 
 // get randomized indexes with shuffle
 
@@ -130,7 +130,7 @@ const myFunc = async emails => {
     for (let numBrowser = 0; numBrowser < NUM_BROWSERS; numBrowser++) {
       promisesBrowsers.push(
         new Promise(async resBrowser => {
-          const oldProxyUrl = `http://51.15.13.159:${
+          const oldProxyUrl = `http://69.46.80.226:${
             proxies[shuffler[numBrowser]]
           }`;
           console.log(proxies[shuffler[numBrowser]]);

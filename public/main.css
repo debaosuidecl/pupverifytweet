@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css?family=Pacifico&display=swap');
+
+body {
+  /* background: #222; */
+  margin: 0;
+  padding: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+h2 {
+  font-weight: 100;
+  font-family: 'Pacifico', cursive;
+  color: rgb(40, 165, 207);
+}
+
+nav {
+  background: #111;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-flow: row;
+}
+.navbar h1 {
+  margin: 0;
+  padding: 20px;
+  color: white;
+  font-size: 30px;
+  font-family: 'Pacifico', cursive;
+  font-weight: 100;
+}
+.twitterLogo {
+  padding-right: 30px;
+  cursor: pointer;
+  transition: 1s;
+}
+.twitterLogo:hover {
+  transition: 1s;
+  transform: scale(1.3) rotateZ(10deg);
+  transform-origin: center;
+  opacity: 0.8;
+}
+.heading {
+  font-family: 'Pacifico', cursive;
+  width: 80%;
+  color: #333;
+  font-size: 34px;
+  margin: auto;
+}
+.Control-Card-Cont {
+  overflow: hidden;
+}
+
+.Control-Card {
+  border-top: 5px solid rgb(40, 165, 207);
+  width: 80%;
+  max-width: 900px;
+  background: white;
+  box-shadow: 0px 20px 17px #ccc;
+  position: relative;
+  min-height: 500px;
+  margin: 20px auto 70px;
+  animation-timing-function: cubic-bezier(0.795, 0.03, 0.385, 0.22);
+  animation-name: example;
+  animation-duration: 1s;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  /* transform: translateX(200px); */
+}
+
+.InputCont {
+  /* width: 100%; */
+  text-align: center;
+  width: 100%;
+  /* background: green; */
+}
+.AffiliatLinkCont input {
+  margin-top: 20px;
+  width: 70%;
+  padding: 10px;
+  border: none;
+  border-bottom: 1px solid #777;
+  outline: none;
+  font-size: 19px;
+  color: rgb(40, 165, 207);
+  font-weight: 100;
+}
+
+.noteOnLink {
+  width: 80%;
+  margin: auto;
+  color: #777;
+  font-size: 15px;
+}
+.ServiceTab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+  margin-top: 20px;
+}
+.numberOfLinksCont {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  /* background: green; */
+  justify-content: space-around;
+  text-align: center;
+  align-items: center;
+}
+.numberOfLinksCont input {
+  border: none;
+  outline: none;
+  border: 1px solid rgb(40, 165, 207);
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 10px;
+  width: 200px;
+}
+
+.AddParamsCont input {
+}
+input:focus {
+  border-bottom: 1px solid rgb(40, 165, 207);
+  transition: 0.6s;
+}
+input::placeholder {
+  font-size: 14px;
+  color: #bbb;
+  font-weight: 100;
+}
+.ButtonCont {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+.ButtonCont a {
+  background: none;
+  border: 1px solid rgb(40, 165, 207);
+  outline: none;
+  padding: 10px;
+  margin-top: 40px;
+  color: rgb(40, 165, 207);
+  cursor: pointer;
+  transition: 0.6s;
+}
+i[data-first='true'],
+i[data-first='true']:hover {
+  opacity: 0.3;
+  transition: 0.2s;
+  cursor: not-allowed;
+}
+i[data-id='cancelService'] {
+  opacity: 0.3;
+  transition: 0.2s;
+  cursor: pointer;
+}
+.numberOfLinksCont:hover i[data-id='cancelService'] {
+  opacity: 1;
+}
+
+.ButtonCont button:hover {
+  background: rgb(40, 165, 207);
+  color: white;
+  transition: 0.6s;
+}
+#addMoreServices {
+  margin-right: 25px;
+}
+#addMoreServices:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+#progressConsole h3 {
+  font-size: 30px;
+  font-family: 'Pacifico', cursive;
+  font-weight: 100;
+  color: rgb(40, 165, 207);
+}
+#progressConsole {
+  height: 500px;
+  width: 80%;
+  padding: 20px;
+  margin: auto;
+}
+#consoleBody {
+  box-shadow: 1px 10px 7px #eee;
+  padding: 20px;
+  min-height: 200px;
+  border-top: 10px solid rgb(40, 165, 207);
+  overflow-y: scroll;
+  height: 500px;
+}
+
+@keyframes example {
+  0% {
+    transform: translateX(2000px);
+  }
+  90% {
+    transform: translateX(-50px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+.numberOfInstances,
+.numberOfLinksGenerated {
+  text-align: center;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 100;
+  color: rgb(40, 165, 207);
+}

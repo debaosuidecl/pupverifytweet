@@ -13,15 +13,10 @@ app.use(express.json({ extended: false }));
 // define routes
 
 app.use('/api/tweet', require('./routes/api/tweet'));
-// app.use("/api/profile", require("./routes/api/profile"));
-// app.use("/api/posts", require("./routes/api/posts"));
-// app.use("/api/auth", require("./routes/api/auth"));
 
 //set port
-const PORT = 5000 || process.env.PORT;
+const PORT = 8080 || process.env.PORT;
 
-app.get('/', (req, res) => {
-  res.send('API RUNNING');
-});
+app.use('/', express.static(__dirname + '/public'));
 
 app.listen(PORT, () => console.log(`Server Started on port ${PORT}`));
