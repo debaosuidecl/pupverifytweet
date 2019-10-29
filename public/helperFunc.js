@@ -59,7 +59,8 @@ const queryStringAndSendHandler = (affiliateLink, socket) => {
     return;
   }
 
-  let baseLink = `${affiliateLink}/?`;
+  let baseLink = `${affiliateLink}?`;
+  // let baseLink = `${affiliateLink}/?`;
 
   // get data-purpose="service"
 
