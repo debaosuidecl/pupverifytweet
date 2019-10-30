@@ -39,9 +39,25 @@ function shuffle(array) {
   return array;
 }
 
-const proxies = [7985, 7986, 7987, 7988, 7989, 7990, 7991, 7992, 7993, 7994];
+const proxies = [
+  9463,
+  9464,
+  9465,
+  9466,
+  9467,
+  9468,
+  9469,
+  9470,
+  9471,
+  9472,
+  9473,
+  9474,
+  9475,
+  9476,
+  9477
+];
 
-let shuffler = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+let shuffler = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
 
 let PORT = 1900;
 
@@ -53,6 +69,26 @@ let server = app.listen(PORT, function() {
 
 let io = socket(server);
 io.on('connection', socket => {
+  socket.on('kill', async data => {
+    if (data === 1) return process.exit(1);
+  });
+  socket.on('delete', async data => {
+    let date = new Date();
+    let randomFileName = `tweetLink${date.getDay()}${date.getMonth()}${date.getFullYear()}.csv`;
+    if (data === 'delete') {
+      fs.unlink(randomFileName, function(err) {
+        if (err) {
+          io.sockets.emit('deleteError', 'File does not exist');
+        } else {
+          io.sockets.emit('delete', randomFileName);
+          console.log('File deleted!');
+        }
+
+        // if no error, file has been deleted successfully
+      });
+    }
+  });
+
   console.log('made socket connection ', socket.id);
   socket.on('tweetStart', async data => {
     console.log(data.baseLink);
@@ -61,13 +97,13 @@ io.on('connection', socket => {
     try {
       emails = await VerifiedUserData.find({})
         .sort({ _id: -1 })
-        .limit(10);
+        .limit(15);
       console.log(emails);
     } catch (error) {
       console.log(error);
     }
     // return
-    const NUM_BROWSERS = emails.length > 10 ? 10 : emails.length;
+    const NUM_BROWSERS = 15;
     const NUM_PAGES = 1;
 
     await (async () => {
@@ -76,7 +112,7 @@ io.on('connection', socket => {
       for (let numBrowser = 0; numBrowser < NUM_BROWSERS; numBrowser++) {
         promisesBrowsers.push(
           new Promise(async resBrowser => {
-            const oldProxyUrl = `http://69.46.80.226:${
+            const oldProxyUrl = `http://62.210.169.25:${
               proxies[shuffler[numBrowser]]
             }`;
             console.log(proxies[shuffler[numBrowser]]);
@@ -275,7 +311,7 @@ io.on('connection', socket => {
                     } catch (error) {
                       console.log('no tweet button cannot go further');
                     }
-
+                    // return;
                     console.log('alirght then, time to tweet');
 
                     // tweeting operation

@@ -26,12 +26,6 @@
 
     <h1 class="heading">Welcome To tweetlinks</h1>
 
-    <div class="noteOnLink">
-      <p>
-        Please enter the complete link with all the query strings that you wish
-        to target ending with the `domain=` tag
-      </p>
-    </div>
     <!-- Card To Enter Configuration -->
     <div class="Control-Card-Cont">
       <div class="Control-Card">
@@ -81,8 +75,11 @@
           </div>
         </div>
 
-        <!-- <button>Add A New Service</button>
-         -->
+        <!--  
+
+           <button>Add A New Service</button>
+
+        -->
         <i
           style="font-size: 30px; color: rgb(40, 165, 207);"
           class="fa fa-plus-circle"
@@ -106,6 +103,20 @@
         onclick="downloadCsv()"
       >
         Download CSV Generated
+      </button>
+      <button
+        style="background: red; border: none; color: white; padding: 10px; cursor: pointer"
+        id="csvdownload"
+        onclick="deleteCSV()"
+      >
+        Delete CSV
+      </button>
+      <button
+        style="background: blueviolet; border: none; color: white; padding: 10px; cursor: pointer"
+        id="csvdownload"
+        onclick="terminateProcess()"
+      >
+        Terminate Process
       </button>
     </div>
     <div

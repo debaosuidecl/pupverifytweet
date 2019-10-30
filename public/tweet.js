@@ -1,6 +1,6 @@
 // Make connection
 
-// let socket = io.connect('http://localhost:1000');
+// let socket = io.connect('http://localhost:1900');
 let socket = io.connect('http://167.99.124.182:1900');
 
 // querySelectorFucntion
@@ -15,7 +15,6 @@ const consoleBody = _('#consoleBody');
 const consoleHeader = _('#consoleHeader');
 const numberOfInstances = _('.numberOfInstances .target');
 const numberOfLinks = _('.numberOfLinksGenerated .target');
-
 // adding service handler
 addMoreServices.addEventListener('click', addAndRemoveService);
 
@@ -71,11 +70,24 @@ socket.on('tweetEnd', data => {
   _(`.processing`).innerHTML = '';
 });
 
+const deleteCSV = () => {
+  // let date = new Date();
+  socket.emit('delete', 'delete');
+};
+const terminateProcess = () => {
+  // let date = new Date();
+  // socket.emit('delete', 'delete');
+  socket.emit('kill', 1);
+  alert('Process Ended');
+  $(`#consoleBody`).html(
+    `<h2 style="text-align: center; color: purple">poopey!!! it's all gone</h2>`
+  );
+};
+
 const downloadCsv = async () => {
   try {
     const response = await fetch(`http://167.99.124.182:9808/download`, {
       method: 'GET'
-      // credentials: 'include'
     });
     console.log(response);
     if (response.status === 200) {
@@ -93,25 +105,12 @@ const downloadCsv = async () => {
     }
     // return;
   } catch (error) {}
-  // doc();
 
-  // let csvData = document
-  //   .querySelector(`#consoleBody`)
-  //   .getAttribute('data-csvString');
-  // const blob = new Blob([csvData], { type: 'text/csv' });
-
-  // const url = window.URL.createObjectURL(blob);
-  // const a = document.createElement('a');
-  // const date = new Date();
-  // a.setAttribute('hidden', url);
-  // a.setAttribute('href', url);
-  // a.setAttribute('download', `download${date.getMilliseconds()}.csv`);
-  // document.body.appendChild(a);
-  // a.click();
   // document.body.removeChild(a);
 };
 
 // visual display of values
+
 let numOfInstanceCounter = 0;
 socket.on('seenTweetButton', data => {
   numOfInstanceCounter++;
@@ -120,4 +119,11 @@ socket.on('seenTweetButton', data => {
 socket.on('instanceError', data => {
   numOfInstanceCounter--;
   numberOfInstances.innerText = numOfInstanceCounter;
+});
+
+socket.on('delete', data => {
+  alert(`${data} is deleted`);
+});
+socket.on('deleteError', data => {
+  alert(`${data}`);
 });

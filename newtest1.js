@@ -57,7 +57,7 @@ function shuffle(array) {
 // const pluginProxy = require('puppeteer-extra-plugin-proxy');
 // add proxy plugin without proxy crendentials
 
-const proxies = [7985, 7986, 7987, 7988, 7989, 7990, 7991, 7992, 7993, 7994];
+const proxies = [9463, 9464, 9465, 9466, 9467, 9468, 9469, 9470, 9471, 9472];
 
 // get randomized indexes with shuffle
 
@@ -130,12 +130,12 @@ const myFunc = async emails => {
     for (let numBrowser = 0; numBrowser < NUM_BROWSERS; numBrowser++) {
       promisesBrowsers.push(
         new Promise(async resBrowser => {
-          const oldProxyUrl = `http://69.46.80.226:${
+          const oldProxyUrl = `http://62.210.169.25:${
             proxies[shuffler[numBrowser]]
           }`;
           console.log(proxies[shuffler[numBrowser]]);
           const browser = await puppeteer.launch({
-            headless: true,
+            headless: false,
             ignoreHTTPSErrors: true,
             ignoreDefaultArgs: ['--enable-automation'],
             args: [
@@ -288,7 +288,7 @@ const myFunc = async emails => {
                     );
 
                     console.log(
-                      'seen tweet button, slight issue we have to delete this record'
+                      'seen tweet button, slight issue we have to transfer this record back'
                     );
                     let verifiedUser = new VerifiedUserData({
                       email,
@@ -547,7 +547,7 @@ const shouldUpdateEmail = async () => {
     const verifiedEmailsCount = await VerifiedUserData.countDocuments();
     console.log('verified emails count is ', verifiedEmailsCount);
     // console.log(emails);
-    if (emails && emails.length > 1 && verifiedEmailsCount < 10) {
+    if (emails && emails.length > 1 && verifiedEmailsCount < 15) {
       await myFunc(emails);
     } else {
       console.log('nothing to verify');
