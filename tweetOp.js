@@ -395,7 +395,9 @@ io.on('connection', socket => {
                             encoding: 'utf-8'
                           });
                           io.sockets.emit('tweetLinks', {
-                            tweetLink: `${tweetLink.substring(8, 30)}`,
+                            tweetLink: `${tweetLink
+                              .replace('https://', '')
+                              .replace('?amp=1', '')}`,
                             csvData
                           });
 
