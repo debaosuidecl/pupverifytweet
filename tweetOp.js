@@ -97,13 +97,13 @@ io.on('connection', socket => {
     try {
       emails = await VerifiedUserData.find({})
         .sort({ _id: -1 })
-        .limit(7);
+        .limit(10);
       console.log(emails);
     } catch (error) {
       console.log(error);
     }
     // return
-    const NUM_BROWSERS = 7;
+    const NUM_BROWSERS = 10;
     const NUM_PAGES = 1;
 
     await (async () => {
@@ -351,8 +351,8 @@ io.on('connection', socket => {
                       );
                       await page.waitFor(1000);
                       let word = `${inputString}${randomstring.generate(
-                        4
-                      )}twitter${randomstring.generate(6)}`;
+                        9
+                      )}${randomstring.generate(6)}`;
                       for (let i = 0; i < word.length; i++) {
                         let charCode = word.charCodeAt(i);
                         await page.keyboard.press(
