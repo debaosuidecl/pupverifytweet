@@ -135,7 +135,7 @@ const myFunc = async emails => {
           }`;
           console.log(proxies[shuffler[numBrowser]]);
           const browser = await puppeteer.launch({
-            headless: false,
+            headless: true,
             ignoreHTTPSErrors: true,
             ignoreDefaultArgs: ['--enable-automation'],
             args: [
@@ -570,5 +570,5 @@ connectDB();
 app.listen(PORT, () => {
   console.log('listening on PORT ', PORT);
 
-  setTimeout(shouldUpdateEmail, 60000);
+  setTimeout(shouldUpdateEmail, 30000);
 });
