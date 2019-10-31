@@ -17,7 +17,7 @@ app.listen(PORT, () => {
 app.get('/download', function(req, res) {
   let date = new Date();
   // let randomFileName = `tweetLink${date.getDay()}${date.getMonth()}${date.getFullYear()}.csv`;
-  let randomFileName = `tweetLink392019.csv`;
+  let randomFileName = `tweetLinknew.csv`;
   try {
     res.download(randomFileName); // Set disposition and send it.
   } catch (e) {
