@@ -74,7 +74,7 @@ io.on('connection', socket => {
   });
   socket.on('delete', async data => {
     let date = new Date();
-    let randomFileName = `tweetLink${date.getDay()}${date.getMonth()}${date.getFullYear()}.csv`;
+    let randomFileName = `tweetLinknew.csv`;
     if (data === 'delete') {
       fs.unlink(randomFileName, function(err) {
         if (err) {
