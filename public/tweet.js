@@ -164,9 +164,9 @@ const verifyAccount = () => {
       // Examine the text in the response
       response.json().then(function(data) {
         console.log(data);
-        alert(
-          'accounts cleared please wait for 10 minutes for the verification process'
-        );
+        if (_('.vCont')) {
+          _('.vCont').innerHTML(JSON.stringify(data));
+        }
       });
     })
     .catch(function(err) {
