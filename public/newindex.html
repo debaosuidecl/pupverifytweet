@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <link rel="stylesheet" href="./main.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/en-gb.js"></script> -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>Tweet Link Generator</title>
+  </head>
+  <script src="https://use.fontawesome.com/cfae4f8cb1.js"></script>
+  <body>
+    <nav class="navbar">
+      <div class="logo">
+        <h1>tweetlinks</h1>
+      </div>
+      <img class="twitterLogo" src="./twitter (1).png" width="50" alt="" />
+    </nav>
+
+    <h1 class="heading">Welcome To tweetlinks</h1>
+
+    <!-- Card To Enter Configuration -->
+    <div class="Control-Card-Cont">
+      <div class="Control-Card">
+        <div class="anotherImage">
+          <img src="./email.png" width="150" alt="" />
+        </div>
+        <div class="InputCont">
+          <div class="AffiliatLinkCont">
+            <input
+              type="text"
+              placeholder="Enter link here (e.g: http://test.com)"
+            />
+            <div class="errorLink"></div>
+          </div>
+        </div>
+        <div>
+          <h2>Enter Services</h2>
+        </div>
+        <div class="ServiceTab">
+          <div class="numberOfLinksCont">
+            <input
+              title="Add a Service Tag . eg: amazon, roblox etc"
+              type="text"
+              value="domain"
+              data-purpose="service"
+              placeholder="Enter a service"
+              disabled="true"
+            />
+            <span> = </span>
+            <input
+              type="text"
+              value="random number"
+              disabled="true"
+              data-purpose="value"
+              title="Enter a Service value that would be after the '=' in the link"
+              placeholder="Enter service value"
+            />
+            <i
+              style="font-size: 30px; color: rgb(207, 40, 40);"
+              class="fa fa-times-circle"
+              title="Cancel Service"
+              data-id="cancelService"
+              data-first="true"
+            ></i>
+
+            <!-- <i class="fas fa-plus"></i> -->
+          </div>
+        </div>
+
+        <!--  
+
+           <button>Add A New Service</button>
+
+        -->
+        <i
+          style="font-size: 30px; color: rgb(40, 165, 207);"
+          class="fa fa-plus-circle"
+          title="Add More Services"
+          id="addMoreServices"
+        ></i>
+        <div class="error"></div>
+        <div class="ButtonCont">
+          <a>
+            Generate Your Links
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <a href="#progressConsole"></a>
+    <div style="text-align: center;">
+      <button
+        style="background: rgb(40, 165, 207); border: none; color: white; padding: 10px; cursor: pointer"
+        id="csvdownload"
+        onclick="downloadCsv()"
+      >
+        Download CSV Generated
+      </button>
+      <button
+        style="background: red; border: none; color: white; padding: 10px; cursor: pointer"
+        id="csvdownload"
+        onclick="deleteCSV()"
+      >
+        Delete CSV
+      </button>
+      <button
+        style="background: blueviolet; border: none; color: white; padding: 10px; cursor: pointer"
+        id="csvdownload"
+        onclick="terminateProcess()"
+      >
+        Restart Process
+      </button>
+
+      <button
+        style="background: gold; border: none; color: white; padding: 10px; cursor: pointer"
+        id="csvdownload"
+        onclick="verifyAccount()"
+      >
+        Verify Accounts
+      </button>
+    </div>
+    <div
+      style="display: flex; justify-content: space-around; align-items: center;"
+    >
+      <div class="numberOfInstances">
+        <p class="target">0</p>
+        <p>Number of Instances</p>
+      </div>
+      <div class="numberOfLinksGenerated">
+        <p class="target">0</p>
+        <p>Number of Links Generated Today</p>
+      </div>
+    </div>
+    <div id="progressConsole">
+      <h3>Progress Console</h3>
+      <div id="consoleHeader">
+        <p
+          style="text-align: center; font-size: 24px; font-weight: 100; color: #bbb"
+        >
+          NO LINKS YET
+        </p>
+      </div>
+      <div id="consoleBody"></div>
+    </div>
+    <script src="./mockcsv.js"></script>
+    <script src="./helperFunc.js"></script>
+    <script src="./tweet.js"></script>
+  </body>
+</html>

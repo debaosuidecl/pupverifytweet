@@ -41,3 +41,17 @@ app.get('/deleteAll', async (req, res) => {
     });
   }
 });
+
+app.get('/getVerifiedAccounts', async (req, res) => {
+  try {
+    let users = await VerifiedUserData.find({});
+    return res.json({
+      users
+    });
+  } catch (error) {
+    res.status(400).json({
+      msg: 'failure',
+      error
+    });
+  }
+});
