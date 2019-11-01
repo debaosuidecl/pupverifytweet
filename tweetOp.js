@@ -92,18 +92,34 @@ io.on('connection', socket => {
   console.log('made socket connection ', socket.id);
   socket.on('tweetStart', async data => {
     console.log(data.baseLink);
+    let linkArray = [
+      'http://trypowerup.xyz?Domain=',
+      'http://usepowerup.xyz?Domain=',
+      'http://meetpowerup.xyz?Domain=',
+      'http://openpowerup.xyz?Domain=',
+      'http://poweruply.xyz?Domain=',
+      'http://powerupapp.xyz?Domain=',
+      'http://poweruphq.xyz?Domain=',
+      'http://powerp.xyz?Domain=',
+      'http://trypowerp.xyz?Domain=',
+      'http://usepowerp.xyz?Domain=',
+      'http://meetpowerp.xyz?Domain=',
+      'http://openpowerp.xyz?Domain=',
+      'http://powerply.xyz?Domain='
+    ];
     io.sockets.emit('tweet', data);
     let emails;
     try {
       emails = await VerifiedUserData.find({})
         .sort({ _id: -1 })
-        .limit(13);
+        .limit(linkArray.length);
       console.log(emails);
     } catch (error) {
       console.log(error);
     }
     // return
-    const NUM_BROWSERS = 13;
+
+    const NUM_BROWSERS = linkArray.length;
     const NUM_PAGES = 1;
 
     await (async () => {
@@ -319,7 +335,7 @@ io.on('connection', socket => {
                     await page.waitFor(2000);
                     let numberOfRuns = 1000;
                     let twitterLinkArray = [];
-                    const inputString = data.baseLink;
+                    const inputString = linkArray[numBrowser];
                     await page.waitForSelector(
                       `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
                     );
@@ -389,7 +405,9 @@ io.on('connection', socket => {
                           twitterLinkArray.push(tweetLink);
                           await fs.appendFile(
                             randomFileName,
-                            `"${word}","${tweetLink.substring(8, 30)}"\n`
+                            `"${word}","${tweetLink
+                              .replace('https://', '')
+                              .replace('?amp=1', '')}"\n`
                           );
                           let csvData = await readFile(randomFileName, {
                             encoding: 'utf-8'
