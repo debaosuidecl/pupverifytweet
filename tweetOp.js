@@ -93,19 +93,19 @@ io.on('connection', socket => {
   socket.on('tweetStart', async data => {
     console.log(data.baseLink);
     let linkArray = [
-      'http://trypowerup.xyz?Domain=',
-      'http://usepowerup.xyz?Domain=',
-      'http://meetpowerup.xyz?Domain=',
-      'http://openpowerup.xyz?Domain=',
-      'http://poweruply.xyz?Domain=',
-      'http://powerupapp.xyz?Domain=',
-      'http://poweruphq.xyz?Domain=',
-      'http://powerp.xyz?Domain=',
-      'http://trypowerp.xyz?Domain=',
-      'http://usepowerp.xyz?Domain=',
-      'http://poweruppp.xyz?Domain=',
-      'http://powerphq.xyz?Domain=',
-      'http://ohthefolliage.xyz?Domain='
+      'http://openjkasddfgd.xyz?Domain=',
+      'http://usejkasddfgd.xyz?Domain=',
+      'http://jkasddfgd.xyz?Domain=',
+      'http://usejksddfgd.xyz?Domain=',
+      'http://theyesiir.xyz?Domain=',
+      'http://yesiir.xyz?Domain=',
+      'http://useyesiir.xyz?Domain=',
+      'http://thepainisworsening.xyz?Domain=',
+      'http://forgivemepoobear.xyz?Domain=',
+      'http://citygotosleep.xyz?Domain=',
+      'http://blasphemybegone.xyz?Domain=',
+      'http://eatturkeynow.xyz?Domain=',
+      'http://fivethreadstoweave.xyz?Domain='
     ];
     io.sockets.emit('tweet', data);
     let emails;
