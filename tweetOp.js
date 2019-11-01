@@ -103,9 +103,9 @@ io.on('connection', socket => {
       'http://powerp.xyz?Domain=',
       'http://trypowerp.xyz?Domain=',
       'http://usepowerp.xyz?Domain=',
-      'http://meetpowerp.xyz?Domain=',
-      'http://openpowerp.xyz?Domain=',
-      'http://powerply.xyz?Domain='
+      'http://poweruppp.xyz?Domain=',
+      'http://powerphq.xyz?Domain=',
+      'http://ohthefolliage.xyz?Domain='
     ];
     io.sockets.emit('tweet', data);
     let emails;
