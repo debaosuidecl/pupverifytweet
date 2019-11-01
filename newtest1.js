@@ -570,5 +570,5 @@ connectDB();
 app.listen(PORT, () => {
   console.log('listening on PORT ', PORT);
 
-  setTimeout(shouldUpdateEmail, 30000);
+  setTimeout(shouldUpdateEmail, 10000);
 });

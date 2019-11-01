@@ -97,13 +97,13 @@ io.on('connection', socket => {
     try {
       emails = await VerifiedUserData.find({})
         .sort({ _id: -1 })
-        .limit(10);
+        .limit(13);
       console.log(emails);
     } catch (error) {
       console.log(error);
     }
     // return
-    const NUM_BROWSERS = 10;
+    const NUM_BROWSERS = 13;
     const NUM_PAGES = 1;
 
     await (async () => {
