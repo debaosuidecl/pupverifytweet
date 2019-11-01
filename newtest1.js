@@ -301,6 +301,15 @@ const myFunc = async emails => {
                     await UserData.findOneAndRemove({ _id: _id });
                     console.log(newUser, ' is deleted');
                   } catch (error) {
+                    try {
+                      await page.waitForSelector(`#tweet-box-home-timeline`);
+                      console.log('checking for annoying opening');
+                      await UserData.findOneAndRemove({ _id: _id });
+                      console.log(newUser, ' is deleted');
+                    } catch (error) {
+                      console.log('annoying opening not there');
+                    }
+
                     console.log('no tweet button move along');
                   }
                   // try for access
