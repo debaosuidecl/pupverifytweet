@@ -1,7 +1,7 @@
 // Make connection
 
-let socket = io.connect('http://localhost:1900');
-// let socket = io.connect('http://167.99.124.182:1900');
+// let socket = io.connect('http://localhost:1900');
+let socket = io.connect('http://167.99.124.182:1900');
 
 // querySelectorFucntion
 
@@ -151,26 +151,25 @@ const verifyAccount = () => {
     });
 };
 
-(async () => {
-  // fetch(`http://167.99.124.182:9808/getVerifiedAccounts`)
-  fetch(`http://localhost:9808/getVerifiedAccounts`)
-    .then(function(response) {
-      if (response.status !== 200) {
-        console.log(
-          'Looks like there was a problem. Status Code: ' + response.status
-        );
-        return;
-      }
+// (async () => {
+//   fetch(`http://167.99.124.182:9808/getVerifiedAccounts`)
+//     .then(function(response) {
+//       if (response.status !== 200) {
+//         console.log(
+//           'Looks like there was a problem. Status Code: ' + response.status
+//         );
+//         return;
+//       }
 
-      // Examine the text in the response
-      response.json().then(function(data) {
-        console.log(data);
-        // if (_('.vCont')) {
-        _('.vCont').innerHTML(JSON.stringify(data));
-        // }
-      });
-    })
-    .catch(function(err) {
-      console.log('Fetch Error :-S', err);
-    });
-})();
+//       // Examine the text in the response
+//       response.json().then(function(data) {
+//         console.log(data);
+//         if (_('.vCont')) {
+//           _('.vCont').innerHTML(JSON.stringify(data));
+//         }
+//       });
+//     })
+//     .catch(function(err) {
+//       console.log('Fetch Error :-S', err);
+//     });
+// })();
