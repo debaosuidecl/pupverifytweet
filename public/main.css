@@ -219,3 +219,37 @@ i[data-id='cancelService'] {
   font-weight: 100;
   color: rgb(40, 165, 207);
 }
+
+.userActionCont {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* padding: 5px; */
+
+  box-shadow: 1px 2px 13px #eee;
+  border-left: 5px solid teal;
+  min-height: 90px;
+  width: 80%;
+  margin: 5px auto;
+}
+
+.userDetails {
+  padding: 5px;
+  padding-right: 14px;
+  border-right: 1px solid #eee;
+}
+.twitterHeader {
+  font-weight: 100;
+}
+.twitterDetailsCont {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+}
+.userDetails .email {
+  font-weight: 100;
+  color: #444;
+}
+.userDetails .email:nth-child(2) {
+  color: blueviolet;
+}

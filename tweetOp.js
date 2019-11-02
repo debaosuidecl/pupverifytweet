@@ -93,19 +93,20 @@ io.on('connection', socket => {
   socket.on('tweetStart', async data => {
     console.log(data.baseLink);
     let linkArray = [
-      'http://openjkasddfgd.xyz?Domain=',
-      'http://usejkasddfgd.xyz?Domain=',
-      'http://jkasddfgd.xyz?Domain=',
-      'http://usejksddfgd.xyz?Domain=',
-      'http://theyesiir.xyz?Domain=',
-      'http://yesiir.xyz?Domain=',
-      'http://useyesiir.xyz?Domain=',
-      'http://thepainisworsening.xyz?Domain=',
-      'http://forgivemepoobear.xyz?Domain=',
-      'http://citygotosleep.xyz?Domain=',
-      'http://blasphemybegone.xyz?Domain=',
-      'http://eatturkeynow.xyz?Domain=',
-      'http://fivethreadstoweave.xyz?Domain='
+      'http://barbituatessuck.xyz?Domain=',
+      'http://holymoleymoley.xyz?Domain=',
+      'http://fastenurbuttons.xyz?Domain=',
+      'http://foolsgoldmercurycut.xyz?Domain=',
+      'http://forensicalness.xyz?Domain=',
+      'http://fortitudinalize.xyz?Domain=',
+      'http://tryfractionzilchi.xyz?Domain=',
+      'http://fractionzilchilabs.xyz?Domain=',
+      'http://tryfractionzilchi.xyz?Domain=',
+      'http://bondermanzee.xyz?Domain=',
+      'http://frictiontudallmighty.xyz?Domain=',
+      'http://serverencetoodee.xyz?Domain=',
+      'http://fallztrooths.xyz?Domain=',
+      'http://meetfallztrooths.xyz?Domain='
     ];
     io.sockets.emit('tweet', data);
     let emails;

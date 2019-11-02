@@ -16,14 +16,14 @@ const consoleHeader = _('#consoleHeader');
 const numberOfInstances = _('.numberOfInstances .target');
 const numberOfLinks = _('.numberOfLinksGenerated .target');
 // adding service handler
-addMoreServices.addEventListener('click', addAndRemoveService);
+// addMoreServices.addEventListener('click', addAndRemoveService);
 
 // emit event to back end on tweet button click
 
 // add tweetbutton click even listener
-tweetBtn.addEventListener('click', () => {
-  queryStringAndSendHandler(affiliatLinkInput.value, socket);
-});
+// tweetBtn.addEventListener('click', () => {
+//   queryStringAndSendHandler(affiliatLinkInput.value, socket);
+// });
 
 // Listen To Tweet  Events
 
@@ -166,7 +166,19 @@ const verifyAccount = () => {
       response.json().then(function(data) {
         console.log(data);
         // if (_('.vCont')) {
-        _('.vCont').innerHTML(JSON.stringify(data));
+        // _('.vCont').innerHTML = JSON.stringify(data);
+        _('.vCont').innerHTML = data['users'].map(user => {
+          return `<div class='userActionCont'>
+          <div class="userDetails">
+            <h3 class="email"> Email: ${user.email}</h3>
+              <div class="twitterDetailsCont">
+              <span class="twitterHeader">Twitter password: </span>
+              <h3 class="email"> ${user.twitterpassword}</h3>
+             </div>
+            </div>
+            
+          </div>`;
+        });
         // }
       });
     })
