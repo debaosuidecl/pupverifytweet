@@ -141,7 +141,7 @@ io.on('connection', socket => {
                 '-disable-setuid-sandbox',
                 `--proxy-server=${oldProxyUrl}`
               ],
-              slowMo: 80
+              slowMo: 120
             });
             const promisesPages = [];
             //
