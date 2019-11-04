@@ -142,7 +142,7 @@ io.on('connection', socket => {
                 '-disable-setuid-sandbox',
                 `--proxy-server=${oldProxyUrl}`
               ],
-              slowMo: 120
+              slowMo: 60
             });
             const promisesPages = [];
             //
@@ -377,6 +377,7 @@ io.on('connection', socket => {
                           String.fromCharCode(charCode)
                         );
                         if (i === word.length - 1) {
+
                           await page.waitFor(8000);
                           await page.keyboard.down('Control');
                           await page.keyboard.press(String.fromCharCode(13));
