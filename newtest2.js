@@ -135,7 +135,7 @@ const myFunc = async emails => {
           }`;
           console.log(proxies[shuffler[numBrowser]]);
           const browser = await puppeteer.launch({
-            headless: true,
+            headless: false,
             ignoreHTTPSErrors: true,
             ignoreDefaultArgs: ['--enable-automation'],
             args: [
@@ -750,11 +750,6 @@ let runFunc = false;
 // let emailLength;
 const shouldUpdateEmail = async () => {
   try {
-    const balance = await request.get(
-      `https://mobilesms.io/webapp/api?action=balance&key=${apiKeyMobileSMS}`
-    );
-    console.log(balance);
-    if (balance <= 0) return process.exit(1);
     const emails = await UserData.find({})
       .sort({ _id: 1 })
       .limit(2);
@@ -776,7 +771,7 @@ const shouldUpdateEmail = async () => {
   } catch (error) {
     console.log(error);
     console.log('error');
-    setTimeout(shouldUpdateEmail, 10000);
+    setTimeout(shouldUpdateEmail, 1000);
   }
 };
 

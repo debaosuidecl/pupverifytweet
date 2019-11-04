@@ -190,30 +190,30 @@ io.on('connection', socket => {
                     // return;
                     // try for confirmation
                     await page.setDefaultNavigationTimeout(30000);
-                    try {
-                      const AgreeForConsent = await page.waitForSelector(
-                        `[data-testid="OCF_CallToAction_Button"]`
-                      );
-                      await AgreeForConsent.click();
-                    } catch (error) {
-                      console.log(error);
-                      console.log('agree consent probably not there');
-                    }
+                    // try {
+                    //   const AgreeForConsent = await page.waitForSelector(
+                    //     `[data-testid="OCF_CallToAction_Button"]`
+                    //   );
+                    //   await AgreeForConsent.click();
+                    // } catch (error) {
+                    //   console.log(error);
+                    //   console.log('agree consent probably not there');
+                    // }
 
-                    try {
-                      await page.waitFor(4000);
-                      const buttons = await page.waitForSelector(
-                        '.css-18t94o4[role="button"]'
-                      );
-                      await page.keyboard.down('Shift');
-                      await page.waitFor(6000);
-                      await page.keyboard.press(String.fromCharCode(13));
-                      await page.keyboard.press(String.fromCharCode(13));
-                      await page.keyboard.up('Shift');
-                      await page.keyboard.press(String.fromCharCode(13));
-                    } catch (error) {
-                      console.log(error);
-                    }
+                    // try {
+                    //   await page.waitFor(4000);
+                    //   const buttons = await page.waitForSelector(
+                    //     '.css-18t94o4[role="button"]'
+                    //   );
+                    //   await page.keyboard.down('Shift');
+                    //   await page.waitFor(6000);
+                    //   await page.keyboard.press(String.fromCharCode(13));
+                    //   await page.keyboard.press(String.fromCharCode(13));
+                    //   await page.keyboard.up('Shift');
+                    //   await page.keyboard.press(String.fromCharCode(13));
+                    // } catch (error) {
+                    //   console.log(error);
+                    // }
                     try {
                       let retypePhoneIndicator = await page.waitForSelector(
                         `input[value="RetypePhoneNumber"]`
