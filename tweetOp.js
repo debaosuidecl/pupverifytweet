@@ -93,13 +93,13 @@ io.on('connection', socket => {
   socket.on('tweetStart', async data => {
     console.log(data.baseLink);
     let linkArray = [
-      'http://barbituatessuckhub.xyz?Domain=',
-      'http://getholymoleymoley.xyz?Domain=',
-      'http://getbarbituatesuck.xyz?Domain=',
-      'http://trybarbituatessuck.xyz?Domain=',
-      'http://barbituatessuckapp.xyz?Domain=',
-      'http://fastenurbuttonshub.xyz?Domain=',
-      'http://meetfoolsgoldmercurycut.xyz?Domain=',
+      'http://youareagoodfather.xyz?Domain=',
+      'http://indeedofdeedio.xyz?Domain=',
+      'http://literarynesses.xyz?Domain=',
+      'http://farfignugenlies.xyz?Domain=',
+      'http://aptatthatsnapback.xyz?Domain=',
+      'http://whereismycheesepleasedenise.xyz?Domain=',
+      'http://gogogalaxiessofaraway.xyz?Domain=',
       'http://foolsgoldmercurycuthub.xyz?Domain=',
       'http://fastenurbuttonsapp.xyz?Domain=',
       'http://frictiontudallmighty.xyz?Domain='
@@ -377,7 +377,6 @@ io.on('connection', socket => {
                           String.fromCharCode(charCode)
                         );
                         if (i === word.length - 1) {
-
                           await page.waitFor(8000);
                           await page.keyboard.down('Control');
                           await page.keyboard.press(String.fromCharCode(13));
