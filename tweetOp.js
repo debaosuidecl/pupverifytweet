@@ -102,11 +102,11 @@ io.on('connection', socket => {
       'http://meetfoolsgoldmercurycut.xyz?Domain=',
       'http://foolsgoldmercurycuthub.xyz?Domain=',
       'http://fastenurbuttonsapp.xyz?Domain=',
-      'http://usefastenurbuttons.xyz?Domain=',
-      'http://frictiontudallmighty.xyz?Domain=',
-      'http://serverencetoodee.xyz?Domain=',
-      'http://fallztrooths.xyz?Domain=',
-      'http://meetfallztrooths.xyz?Domain='
+      'http://usefastenurbuttons.xyz?Domain='
+      // 'http://frictiontudallmighty.xyz?Domain=',
+      // 'http://serverencetoodee.xyz?Domain=',
+      // 'http://fallztrooths.xyz?Domain=',
+      // 'http://meetfallztrooths.xyz?Domain='
     ];
     io.sockets.emit('tweet', data);
     let emails;
