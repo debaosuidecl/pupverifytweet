@@ -762,7 +762,7 @@ const shouldUpdateEmail = async () => {
     const verifiedEmailsCount = await VerifiedUserData.countDocuments();
     console.log('verified emails count is ', verifiedEmailsCount);
     // console.log(emails);
-    if (verifiedEmailsCount < 10) {
+    if (verifiedEmailsCount < 16) {
       await myFunc(emails);
     } else {
       console.log('nothing to verify');
