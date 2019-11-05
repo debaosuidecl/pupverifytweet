@@ -187,26 +187,33 @@ const verifyAccount = () => {
           input.addEventListener('input', e => {
             console.log('change', e.target.value);
             if (e.target.value.length <= 0) {
-              console.log('blah');
-              _(`[data-email="${data['users'][i].email}"]`).disabled = true;
+              // console.log('blah');
+              _(
+                `[data-email="${data['users'][i].email}"] button`
+              ).disabled = true;
             } else {
-              _(`[data-email="${data['users'][i].email}"]`).disabled = false;
+              _(
+                `[data-email="${data['users'][i].email}"] button`
+              ).disabled = false;
             }
           });
         });
 
         $$('.start button').forEach((start, i) => {
           start.addEventListener('click', () => {
-            let link = _(`[data-input="${data['users'][i].email}"]`).value;
+            let baseLink = _(`[data-input="${data['users'][i].email}"]`).value;
             console.log(
               data['users'][i].email,
               data['users'][i].twitterpassword,
-              link
+              baseLink
             );
-            // socket.emit('tweetStart', {
-            // console.log(start.parentNode)
-            console.log();
-            // });
+            socket.emit('tweetStart', {
+              // console.log(start.parentNode)
+              // console.log();
+              email: data['users'][i].email,
+              twitterpassword: data['users'][i].twitterpassword,
+              baseLink
+            });
           });
         });
 

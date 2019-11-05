@@ -7,10 +7,12 @@ body {
 }
 button {
   cursor: pointer;
+  transition: 1s;
 }
 button:disabled {
   cursor: not-allowed;
   background: #eee !important;
+  transition: none;
 }
 html {
   scroll-behavior: smooth;
@@ -295,6 +297,8 @@ i[data-id='cancelService'] {
 .enterLinkCont input {
   border: none;
   width: 100%;
+  padding: 13px;
+  outline: none;
   border-bottom: 1px solid #eee;
 }
 .count {

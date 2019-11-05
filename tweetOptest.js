@@ -91,23 +91,26 @@ io.on('connection', socket => {
 
   console.log('made socket connection ', socket.id);
   socket.on('tweetStart', async data => {
-    console.log(data.baseLink);
-    let linkArray = [
-      'http://youareagoodfather.xyz?Domain=',
-      'http://indeedofdeedio.xyz?Domain=',
-      'http://literarynesses.xyz?Domain=',
-      'http://farfignugenlies.xyz?Domain=',
-      'http://aptatthatsnapback.xyz?Domain=',
-      'http://whereismycheesepleasedenise.xyz?Domain=',
-      'http://gogogalaxiessofaraway.xyz?Domain=',
-      'http://foolsgoldmercurycuthub.xyz?Domain=',
-      'http://fastenurbuttonsapp.xyz?Domain=',
-      'http://frictiontudallmighty.xyz?Domain='
-      // 'http://frictiontudallmighty.xyz?Domain=',
-      // 'http://serverencetoodee.xyz?Domain=',
-      // 'http://fallztrooths.xyz?Domain=',
-      // 'http://meetfallztrooths.xyz?Domain='
-    ];
+    // console.log(data.baseLink);
+
+    // let linkArray = [
+    //   'http://youareagoodfather.xyz?Domain=',
+    //   'http://indeedofdeedio.xyz?Domain=',
+    //   'http://literarynesses.xyz?Domain=',
+    //   'http://farfignugenlies.xyz?Domain=',
+    //   'http://aptatthatsnapback.xyz?Domain=',
+    //   'http://whereismycheesepleasedenise.xyz?Domain=',
+    //   'http://gogogalaxiessofaraway.xyz?Domain=',
+    //   'http://foolsgoldmercurycuthub.xyz?Domain=',
+    //   'http://fastenurbuttonsapp.xyz?Domain=',
+    //   'http://frictiontudallmighty.xyz?Domain='
+    //   'http://frictiontudallmighty.xyz?Domain=',
+    //   'http://serverencetoodee.xyz?Domain=',
+    //   'http://fallztrooths.xyz?Domain=',
+    //   'http://meetfallztrooths.xyz?Domain='
+    // ];
+
+    // data should contain baselink, email twitter and outlook password
     io.sockets.emit('tweet', data);
     let emails;
     try {
