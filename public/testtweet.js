@@ -1,6 +1,6 @@
 // Make connection
 
-let socket = io.connect('http://localhost:1900');
+let socket = io.connect('http://localhost:3900');
 // let socket = io.connect('http://167.99.124.182:1900');
 
 // querySelectorFucntion
@@ -165,20 +165,38 @@ const verifyAccount = () => {
       // Examine the text in the response
       response.json().then(function(data) {
         console.log(data);
-        // if (_('.vCont')) {
-        // _('.vCont').innerHTML = JSON.stringify(data);
+
         _('.vCont').innerHTML = data['users'].map(user => {
           return `<div class='userActionCont'>
           <div class="userDetails">
-            <h3 class="email"> Email: ${user.email}</h3>
+            <h3 class="email"> ${user.email}</h3>
               <div class="twitterDetailsCont">
-              <span class="twitterHeader">Twitter password: </span>
+          
               <h3 class="email"> ${user.twitterpassword}</h3>
              </div>
             </div>
-            
+            <div class="enterLinkCont"> <input data-input="${user.email}" type="text" placeholder="Enter Link"/> </div>
+            <div class="start" data-email="${user.email}" data-twitterpassword="${user.twitterpassword}"><button> Start </button> </div>
+            <div class="stop"> <button> Stop </button> </div>
+            <div class="count"> 0 links </div>
+
+
           </div>`;
         });
+
+        $$('.start button').forEach((start, i) => {
+          start.addEventListener('click', () => {
+            console.log(
+              data['users'][i].email,
+              data['users'][i].twitterpassword
+            );
+            // socket.emit('tweetStart', {
+            // console.log(start.parentNode)
+            console.log();
+            // });
+          });
+        });
+
         // }
       });
     })

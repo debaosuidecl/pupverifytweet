@@ -5,6 +5,9 @@ body {
   margin: 0;
   padding: 0;
 }
+button {
+  cursor: pointer;
+}
 html {
   scroll-behavior: smooth;
 }
@@ -234,9 +237,12 @@ i[data-id='cancelService'] {
 }
 
 .userDetails {
+  flex: 1;
+  word-wrap: break-word;
+  max-width: 200px;
   padding: 5px;
-  padding-right: 14px;
-  border-right: 1px solid #eee;
+  padding-right: 2px;
+  /* border-right: 1px solid #eee; */
 }
 .twitterHeader {
   font-weight: 100;
@@ -252,4 +258,42 @@ i[data-id='cancelService'] {
 }
 .userDetails .email:nth-child(2) {
   color: blueviolet;
+}
+
+.userDetails {
+}
+
+.start,
+.stop,
+.count {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.enterLinkCont {
+  flex: 2;
+}
+
+.start button {
+  border: none;
+  background: rgb(0, 255, 149);
+  color: white;
+  padding: 10px;
+}
+
+.stop button {
+  border: none;
+  background: rgb(255, 0, 98);
+  color: white;
+  padding: 10px;
+}
+
+.enterLinkCont input {
+  border: none;
+  width: 100%;
+  border-bottom: 1px solid #eee;
+}
+.count {
+  font-size: 17px;
+  font-weight: 100;
 }

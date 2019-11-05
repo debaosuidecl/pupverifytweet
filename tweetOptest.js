@@ -59,7 +59,7 @@ const proxies = [
 
 let shuffler = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
 
-let PORT = 1900;
+let PORT = 3900;
 
 let server = app.listen(PORT, function() {
   connectDB();
@@ -93,14 +93,14 @@ io.on('connection', socket => {
   socket.on('tweetStart', async data => {
     console.log(data.baseLink);
     let linkArray = [
-      'http://lovewonteverletyougo.xyz?Domain=',
-      'http://keepmeinsidethepocketofyourrippedjeans.xyz?Domain=',
-      'http://keepitdeepwithinyoursoul.xyz?Domain=',
-      'http://ifyouhurtmethatsokbaby.xyz?Domain=',
-      'http://whenyouwere16.xyz?Domain=',
+      'http://youareagoodfather.xyz?Domain=',
+      'http://indeedofdeedio.xyz?Domain=',
+      'http://literarynesses.xyz?Domain=',
+      'http://farfignugenlies.xyz?Domain=',
+      'http://aptatthatsnapback.xyz?Domain=',
       'http://whereismycheesepleasedenise.xyz?Domain=',
       'http://gogogalaxiessofaraway.xyz?Domain=',
-      'http://lovewonteverletyougo.xyz?Domain=',
+      'http://foolsgoldmercurycuthub.xyz?Domain=',
       'http://fastenurbuttonsapp.xyz?Domain=',
       'http://frictiontudallmighty.xyz?Domain='
       // 'http://frictiontudallmighty.xyz?Domain=',
@@ -190,30 +190,7 @@ io.on('connection', socket => {
                     // return;
                     // try for confirmation
                     await page.setDefaultNavigationTimeout(30000);
-                    // try {
-                    //   const AgreeForConsent = await page.waitForSelector(
-                    //     `[data-testid="OCF_CallToAction_Button"]`
-                    //   );
-                    //   await AgreeForConsent.click();
-                    // } catch (error) {
-                    //   console.log(error);
-                    //   console.log('agree consent probably not there');
-                    // }
 
-                    // try {
-                    //   await page.waitFor(4000);
-                    //   const buttons = await page.waitForSelector(
-                    //     '.css-18t94o4[role="button"]'
-                    //   );
-                    //   await page.keyboard.down('Shift');
-                    //   await page.waitFor(6000);
-                    //   await page.keyboard.press(String.fromCharCode(13));
-                    //   await page.keyboard.press(String.fromCharCode(13));
-                    //   await page.keyboard.up('Shift');
-                    //   await page.keyboard.press(String.fromCharCode(13));
-                    // } catch (error) {
-                    //   console.log(error);
-                    // }
                     try {
                       let retypePhoneIndicator = await page.waitForSelector(
                         `input[value="RetypePhoneNumber"]`
