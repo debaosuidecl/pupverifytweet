@@ -92,7 +92,8 @@ io.on('connection', socket => {
   console.log('made socket connection ', socket.id);
   socket.on('tweetStart', async data => {
     // console.log(data.baseLink);
-
+    console.log(data);
+    return;
     // let linkArray = [
     //   'http://youareagoodfather.xyz?Domain=',
     //   'http://indeedofdeedio.xyz?Domain=',
