@@ -176,19 +176,32 @@ const verifyAccount = () => {
              </div>
             </div>
             <div class="enterLinkCont"> <input data-input="${user.email}" type="text" placeholder="Enter Link"/> </div>
-            <div class="start" data-email="${user.email}" data-twitterpassword="${user.twitterpassword}"><button> Start </button> </div>
+            <div class="start" data-email="${user.email}" data-twitterpassword="${user.twitterpassword}"><button disabled="true"> Start </button> </div>
             <div class="stop"> <button> Stop </button> </div>
             <div class="count"> 0 links </div>
 
 
           </div>`;
         });
+        $$(`.enterLinkCont input`).forEach((input, i) => {
+          input.addEventListener('input', e => {
+            console.log('change', e.target.value);
+            if (e.target.value.length <= 0) {
+              console.log('blah');
+              _(`[data-email="${data['users'][i].email}"]`).disabled = true;
+            } else {
+              _(`[data-email="${data['users'][i].email}"]`).disabled = false;
+            }
+          });
+        });
 
         $$('.start button').forEach((start, i) => {
           start.addEventListener('click', () => {
+            let link = _(`[data-input="${data['users'][i].email}"]`).value;
             console.log(
               data['users'][i].email,
-              data['users'][i].twitterpassword
+              data['users'][i].twitterpassword,
+              link
             );
             // socket.emit('tweetStart', {
             // console.log(start.parentNode)
