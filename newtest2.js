@@ -309,6 +309,13 @@ const myFunc = async emails => {
                     console.log(error);
                   }
                   try {
+                    console.log('check for continue to twitter');
+                    await page.waitForSelector(`[value="Continue to Twitter"]`);
+                    await page.click(`[value="Continue to Twitter"]`);
+                  } catch (error) {
+                    console.log('continue to twitter not there');
+                  }
+                  try {
                     console.log(
                       'check for tweet button for logged in phone number addition'
                     );

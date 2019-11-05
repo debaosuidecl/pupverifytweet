@@ -308,6 +308,14 @@ const myFunc = async emails => {
                   } catch (error) {
                     console.log(error);
                   }
+
+                  try {
+                    console.log('check for continue to twitter');
+                    await page.waitForSelector(`[value="Continue to Twitter"]`);
+                    await page.click(`[value="Continue to Twitter"]`);
+                  } catch (error) {
+                    console.log('continue to twitter not there');
+                  }
                   try {
                     console.log(
                       'check for tweet button for logged in phone number addition'
@@ -440,7 +448,7 @@ const myFunc = async emails => {
                       console.log(
                         'trying one more time and waiting for 60000 for message'
                       );
-                      await page.waitFor(60000);
+                      await page.waitFor(40000);
 
                       // get the code
                       const smsRes = await request.get(
@@ -485,21 +493,6 @@ const myFunc = async emails => {
                       'seen tweet button, slight issue we have to transfer this record back'
                     );
 
-                    // data-testid="confirmationSheetConfirm"
-                    // name="verfication_code"
-                    // [role="button"]
-                    // let
-
-                    // return;
-                    // let verifiedUser = new VerifiedUserData({
-                    //   email,
-                    //   twitterpassword,
-                    //   outlookpwd
-                    // });
-                    // const newUser = await verifiedUser.save();
-                    // console.log(newUser, 'data saved');
-
-                    // await UserData.findOneAndRemove({ _id: _id });
                     console.log(newUser, ' is deleted');
                   } catch (error) {
                     try {
