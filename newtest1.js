@@ -401,7 +401,7 @@ const myFunc = async emails => {
                       await page.waitForSelector(`[name="verfication_code"]`);
                       await page.waitFor(60000);
                       console.log(phone, 'for code');
-                      await page.waitFor(60000);
+                      await page.waitFor(100000);
 
                       // get the code
                       const smsRes = await request.get(
@@ -637,7 +637,7 @@ const myFunc = async emails => {
                       await page.waitForSelector(`#code`);
                       // enter the code
                       console.log(phone, 'for code');
-                      await page.waitFor(60000);
+                      await page.waitFor(110000);
 
                       // get the code
                       const smsRes = await request.get(
