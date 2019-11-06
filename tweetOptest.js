@@ -93,352 +93,408 @@ io.on('connection', socket => {
   socket.on('tweetStart', async data => {
     // console.log(data.baseLink);
     console.log(data);
-    return;
-    // let linkArray = [
-    //   'http://youareagoodfather.xyz?Domain=',
-    //   'http://indeedofdeedio.xyz?Domain=',
-    //   'http://literarynesses.xyz?Domain=',
-    //   'http://farfignugenlies.xyz?Domain=',
-    //   'http://aptatthatsnapback.xyz?Domain=',
-    //   'http://whereismycheesepleasedenise.xyz?Domain=',
-    //   'http://gogogalaxiessofaraway.xyz?Domain=',
-    //   'http://foolsgoldmercurycuthub.xyz?Domain=',
-    //   'http://fastenurbuttonsapp.xyz?Domain=',
-    //   'http://frictiontudallmighty.xyz?Domain='
-    //   'http://frictiontudallmighty.xyz?Domain=',
-    //   'http://serverencetoodee.xyz?Domain=',
-    //   'http://fallztrooths.xyz?Domain=',
-    //   'http://meetfallztrooths.xyz?Domain='
-    // ];
 
-    // data should contain baselink, email twitter and outlook password
-    io.sockets.emit('tweet', data);
-    let emails;
-    try {
-      emails = await VerifiedUserData.find({})
-        .sort({ _id: -1 })
-        .limit(linkArray.length);
-      console.log(emails);
-    } catch (error) {
-      console.log(error);
-    }
+    // let emails;
+
     // return
 
-    const NUM_BROWSERS = linkArray.length;
-    const NUM_PAGES = 1;
-
-    await (async () => {
-      const startDate = new Date().getTime();
-      const promisesBrowsers = [];
-      for (let numBrowser = 0; numBrowser < NUM_BROWSERS; numBrowser++) {
-        promisesBrowsers.push(
-          new Promise(async resBrowser => {
-            const oldProxyUrl = `http://62.210.169.25:${
-              proxies[shuffler[numBrowser]]
-            }`;
-            console.log(proxies[shuffler[numBrowser]]);
-            const browser = await puppeteer.launch({
-              headless: true,
-              ignoreHTTPSErrors: true,
-              ignoreDefaultArgs: ['--enable-automation'],
-              args: [
-                `-no-sandbox`,
-                '-disable-setuid-sandbox',
-                `--proxy-server=${oldProxyUrl}`
-              ],
-              slowMo: 60
-            });
-            const promisesPages = [];
-            //
-
-            for (let numPage = 0; numPage < NUM_PAGES; numPage++) {
-              promisesPages.push(
-                new Promise(async resPage => {
-                  const {
-                    email,
-                    twitterpassword,
-                    outlookpwd,
-                    _id,
-                    phone
-                  } = emails[numBrowser];
-                  console.log(
-                    email,
-                    twitterpassword,
-                    outlookpwd,
-                    numBrowser,
-                    phone,
-                    _id
-                  );
-                  try {
-                    const page = await browser.newPage();
-
-                    // await page.goto('http://lumtest.com/myip.json');
-                    // return;
-                    await prepareForTest(page);
-                    await page.setDefaultNavigationTimeout(0);
-                    await page.goto('https://twitter.com/login');
-
-                    await page.waitFor(5000);
-                    await page.waitForSelector(
-                      `[name="session[username_or_email]"]`
-                    );
-                    await page.waitForSelector(`.js-password-field`);
-                    await page.type(`[type="text"]`, email);
-                    await page.type(`.js-password-field`, twitterpassword);
-                    await page.waitFor(2000);
-                    await page.waitForSelector(`button[type="submit"]`);
-                    await page.click(`button[type="submit"]`);
-
-                    // await page.waitForNavigation();
-                    console.log('logged in');
-                    // return;
-                    // try for confirmation
-                    await page.setDefaultNavigationTimeout(30000);
-
-                    try {
-                      let retypePhoneIndicator = await page.waitForSelector(
-                        `input[value="RetypePhoneNumber"]`
-                      );
-                      await page.waitForSelector(`[name="challenge_response"]`);
-                      await page.type(`[name="challenge_response"]`, phone);
-                      // await page.type(`[name="challenge_response"]`, phone );
-                      await page.click(`[type="submit"]`);
-                      // await page.type('#challenge_response', phone);
-                    } catch (e) {
-                      console.log(e, 'no phone number to retype');
-                    }
-
-                    try {
-                      let confirmationChallengeBtn = await page.waitForSelector(
-                        `input[value="TemporaryPassword"]`
-                      );
-                      console.log(confirmationChallengeBtn, 'the confirmation');
-
-                      const page2 = await browser.newPage();
-                      await page2.setDefaultNavigationTimeout(90000);
-                      await prepareForTest(page2);
-
-                      // sign in to outlook algorithm
-                      await page2.goto(`https://login.live.com/`);
-                      await page2.waitForSelector(`[type="email"]`);
-                      await page2.type(`[type="email"]`, email);
-                      await page2.click(`[type="submit"]`);
-                      await page2.waitForSelector(`[type="password"]`);
-                      await page2.waitFor(2000);
-                      await page2.type(`[type="password"]`, outlookpwd);
-                      await page2.click(`[type="submit"]`);
-                      await page2.waitForNavigation();
-                      let page3 = await browser.newPage();
-                      await prepareForTest(page3);
-                      await page3.goto('https://outlook.live.com/mail/inbox');
-                      await page3.waitFor(3000);
-                      try {
-                        await page3.waitForSelector(
-                          `[title="verify@twitter.com"]`
-                        );
-                        const twitterSubjects = await page3.$$(
-                          `[title="verify@twitter.com"]`
-                        );
-                        const confirmationSubject = twitterSubjects[0];
-                        await confirmationSubject.click();
-
-                        await page3.waitForSelector(`td.x_support > strong`);
-                        let boldTexts = await page3.$$(`td.x_support > strong`);
-                        console.log(boldTexts);
-                        let confirmationCodeTag = boldTexts[2];
-
-                        confirmationCode = await page3.evaluate(
-                          confirmationCodeTag => confirmationCodeTag.innerText,
-                          confirmationCodeTag
-                        );
-                        console.log(confirmationCode);
-                      } catch (error) {
-                        console.log(error);
-                        console.log('not in focused');
-                        await page3.waitForSelector(
-                          `[data-icon-name="MailLowImportance"]`
-                        );
-                        await page3.click(
-                          `[data-icon-name="MailLowImportance"]`
-                        );
-                        await page3.waitForSelector(
-                          `[title="verify@twitter.com"]`
-                        );
-                        const twitterSubjects = await page3.$$(
-                          `[title="verify@twitter.com"]`
-                        );
-                        const confirmationSubject = twitterSubjects[0];
-                        await confirmationSubject.click();
-                        await confirmationSubject.click();
-
-                        await page3.waitForSelector(`td.x_support > strong`);
-                        let boldTexts = await page3.$$(`td.x_support > strong`);
-                        console.log(boldTexts);
-                        let confirmationCodeTag = boldTexts[2];
-
-                        confirmationCode = await page3.evaluate(
-                          confirmationCodeTag => confirmationCodeTag.innerText,
-                          confirmationCodeTag
-                        );
-                        console.log(confirmationCode);
-                      }
-
-                      // go back twitter
-                      await page2.close();
-                      await page3.close();
-
-                      await page.bringToFront();
-
-                      await page.type('#challenge_response', confirmationCode);
-                      await confirmationChallengeBtn.click();
-                    } catch (error) {
-                      console.log(
-                        'oops something went wrong with challenge then'
-                      );
-                      console.log(error);
-                    }
-
-                    // try for already verified
-
-                    try {
-                      await page.waitForSelector(
-                        `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
-                      );
-                      console.log('seen tweet button time to tweet');
-                      io.sockets.emit('seenTweetButton', 1);
-                    } catch (error) {
-                      console.log('no tweet button cannot go further');
-                    }
-                    // return;
-                    console.log('alirght then, time to tweet');
-
-                    // tweeting operation
-                    // await page.mouse.click(300, 400);
-                    await page.waitFor(2000);
-                    let numberOfRuns = 1000;
-                    let twitterLinkArray = [];
-                    const inputString = linkArray[numBrowser];
-                    console.log(inputString, 'input string for ', email);
-                    await page.waitForSelector(
-                      `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
-                    );
-                    // const randomFileName = `tweetLink.csv`;
-
-                    let date = new Date();
-                    let randomFileName = `tweetLinknew.csv`;
-                    await fs.ensureFile(randomFileName);
-                    console.log('File ensured');
-
-                    let compose = await page.$(
-                      `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
-                    );
-                    // compose.click();
-                    // await page.click(0.5, 0.5);
-                    await page.mouse.click(0.5, 0.5);
-                    for (let j = 0; j < numberOfRuns; j++) {
-                      await page.waitForSelector(
-                        `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
-                      );
-
-                      // await page.waitFor(5000);
-                      await compose.click();
-                      // await page.goto(`https://twitter.com/compose/tweet`);
-                      // await page.bringToFront();
-                      await page.waitFor(1000);
-                      await page.waitForSelector(
-                        '.public-DraftStyleDefault-block'
-                      );
-                      await page.waitFor(1000);
-                      let word = `${inputString}${randomstring.generate(
-                        9
-                      )}${randomstring.generate(6)}`;
-                      for (let i = 0; i < word.length; i++) {
-                        let charCode = word.charCodeAt(i);
-                        await page.keyboard.press(
-                          String.fromCharCode(charCode)
-                        );
-                        if (i === word.length - 1) {
-                          await page.waitFor(8000);
-                          await page.keyboard.down('Control');
-                          await page.keyboard.press(String.fromCharCode(13));
-                          await page.keyboard.up('Control');
-                          // await page.waitForNavigation();
-                          await page.waitForSelector(`[title='${word}']`);
-                          console.log('tweet sent');
-                          let link = '';
-                          try {
-                            link = await page.waitForSelector(
-                              `[title='${word}']`
-                            );
-                          } catch (e) {
-                            console.log(e);
-                            io.sockets.emit('instanceError', 1);
-                          }
-                          let tweetLink = '';
-                          try {
-                            tweetLink = await page.evaluate(link => {
-                              return link.getAttribute('href');
-                            }, link);
-                          } catch (error) {
-                            console.log(error, 'not seen link');
-                            io.sockets.emit('instanceError', 1);
-                          }
-
-                          console.log(tweetLink, 'seen');
-                          twitterLinkArray.push(tweetLink);
-                          await fs.appendFile(
-                            randomFileName,
-                            `"${word}","${tweetLink
-                              .replace('https://', '')
-                              .replace('?amp=1', '')}"\n`
-                          );
-                          let csvData = await readFile(randomFileName, {
-                            encoding: 'utf-8'
-                          });
-                          io.sockets.emit('tweetLinks', {
-                            tweetLink: `${tweetLink
-                              .replace('https://', '')
-                              .replace('?amp=1', '')}`,
-                            csvData
-                          });
-
-                          if (j === numberOfRuns - 1) {
-                            console.log(twitterLinkArray);
-                            console.log('file saved');
-                            console.log('done');
-                            io.sockets.emit('instanceError', 1);
-
-                            await browser.close();
-                          }
-                          // await page.reload();
-                        }
-                      }
-                    }
-                  } catch (error) {
-                    console.log(error);
-                    io.sockets.emit('instanceError', 1);
-                  }
-                  resPage();
-                })
-              );
-            }
-            await Promise.all(promisesPages);
-            await browser.close();
-
-            resBrowser();
-          })
-        );
-      }
-
-      await Promise.all(promisesBrowsers);
-      console.log(
-        `Time elapsed ${Math.round(
-          (new Date().getTime() - startDate) / 1000
-        )} s`
-      );
-      io.sockets.emit('tweetEnd', {
-        timeElapsed: Math.round((new Date().getTime() - startDate) / 1000)
-      });
-    })();
+    // declare a function
+    await startTweet(
+      data,
+      io,
+      puppeteer,
+      proxies,
+      shuffler,
+      prepareForTest,
+      fs
+    );
   });
 });
+
+const startTweet = async (
+  data,
+  io,
+  puppeteer,
+  proxies,
+  shuffler,
+  prepareForTest,
+  fs
+) => {
+  function randomNumber(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+  io.sockets.emit('tweet', data);
+  const NUM_BROWSERS = 1;
+  const NUM_PAGES = 1;
+  try {
+    let verifiedUser = await VerifiedUserData.findOne({
+      email: data.email
+    });
+    console.log(verifiedUser);
+    verifiedUser.active = true;
+    // return;
+    await verifiedUser.save();
+  } catch (error) {
+    console.log(error);
+    console.log('not changed active state ... trying again');
+    await startTweet(
+      data,
+      io,
+      puppeteer,
+      proxies,
+      shuffler,
+      prepareForTest,
+      fs
+    );
+  }
+  await (async () => {
+    const startDate = new Date().getTime();
+    const promisesBrowsers = [];
+    for (let numBrowser = 0; numBrowser < NUM_BROWSERS; numBrowser++) {
+      promisesBrowsers.push(
+        new Promise(async resBrowser => {
+          const oldProxyUrl = `http://62.210.169.25:${
+            proxies[shuffler[numBrowser]]
+          }`;
+          console.log(proxies[shuffler[numBrowser]]);
+          const browser = await puppeteer.launch({
+            headless: false,
+            ignoreHTTPSErrors: true,
+            ignoreDefaultArgs: ['--enable-automation'],
+            args: [
+              `-no-sandbox`,
+              '-disable-setuid-sandbox',
+              `--proxy-server=${oldProxyUrl}`
+            ],
+            slowMo: 60
+          });
+          const promisesPages = [];
+          //
+
+          for (let numPage = 0; numPage < NUM_PAGES; numPage++) {
+            promisesPages.push(
+              new Promise(async resPage => {
+                const { email, twitterpassword, outlookpwd, _id, phone } = data;
+                console.log(
+                  email,
+                  twitterpassword,
+                  outlookpwd,
+                  numBrowser,
+                  phone,
+                  _id
+                );
+                try {
+                  const page = await browser.newPage();
+
+                  // await page.goto('http://lumtest.com/myip.json');
+                  // return;
+                  await prepareForTest(page);
+                  await page.setDefaultNavigationTimeout(0);
+                  await page.goto('https://twitter.com/login');
+
+                  await page.waitFor(5000);
+                  await page.waitForSelector(
+                    `[name="session[username_or_email]"]`
+                  );
+                  await page.waitForSelector(`.js-password-field`);
+                  await page.type(`[type="text"]`, email);
+                  await page.type(`.js-password-field`, twitterpassword);
+                  await page.waitFor(2000);
+                  await page.waitForSelector(`button[type="submit"]`);
+                  await page.click(`button[type="submit"]`);
+
+                  // await page.waitForNavigation();
+                  console.log('logged in');
+                  // return;
+                  // try for confirmation
+                  await page.setDefaultNavigationTimeout(30000);
+
+                  try {
+                    let retypePhoneIndicator = await page.waitForSelector(
+                      `input[value="RetypePhoneNumber"]`
+                    );
+                    await page.waitForSelector(`[name="challenge_response"]`);
+                    await page.type(`[name="challenge_response"]`, phone);
+                    // await page.type(`[name="challenge_response"]`, phone );
+                    await page.click(`[type="submit"]`);
+                    // await page.type('#challenge_response', phone);
+                  } catch (e) {
+                    console.log(e, 'no phone number to retype');
+                  }
+
+                  try {
+                    let confirmationChallengeBtn = await page.waitForSelector(
+                      `input[value="TemporaryPassword"]`
+                    );
+                    console.log(confirmationChallengeBtn, 'the confirmation');
+
+                    const page2 = await browser.newPage();
+                    await page2.setDefaultNavigationTimeout(90000);
+                    await prepareForTest(page2);
+
+                    // sign in to outlook algorithm
+                    await page2.goto(`https://login.live.com/`);
+                    await page2.waitForSelector(`[type="email"]`);
+                    await page2.type(`[type="email"]`, email);
+                    await page2.click(`[type="submit"]`);
+                    await page2.waitForSelector(`[type="password"]`);
+                    await page2.waitFor(2000);
+                    await page2.type(`[type="password"]`, outlookpwd);
+                    await page2.click(`[type="submit"]`);
+                    await page2.waitForNavigation();
+                    let page3 = await browser.newPage();
+                    await prepareForTest(page3);
+                    await page3.goto('https://outlook.live.com/mail/inbox');
+                    await page3.waitFor(3000);
+                    try {
+                      await page3.waitForSelector(
+                        `[title="verify@twitter.com"]`
+                      );
+                      const twitterSubjects = await page3.$$(
+                        `[title="verify@twitter.com"]`
+                      );
+                      const confirmationSubject = twitterSubjects[0];
+                      await confirmationSubject.click();
+
+                      await page3.waitForSelector(`td.x_support > strong`);
+                      let boldTexts = await page3.$$(`td.x_support > strong`);
+                      console.log(boldTexts);
+                      let confirmationCodeTag = boldTexts[2];
+
+                      confirmationCode = await page3.evaluate(
+                        confirmationCodeTag => confirmationCodeTag.innerText,
+                        confirmationCodeTag
+                      );
+                      console.log(confirmationCode);
+                    } catch (error) {
+                      console.log(error);
+                      console.log('not in focused');
+                      await page3.waitForSelector(
+                        `[data-icon-name="MailLowImportance"]`
+                      );
+                      await page3.click(`[data-icon-name="MailLowImportance"]`);
+                      await page3.waitForSelector(
+                        `[title="verify@twitter.com"]`
+                      );
+                      const twitterSubjects = await page3.$$(
+                        `[title="verify@twitter.com"]`
+                      );
+                      const confirmationSubject = twitterSubjects[0];
+                      await confirmationSubject.click();
+                      await confirmationSubject.click();
+
+                      await page3.waitForSelector(`td.x_support > strong`);
+                      let boldTexts = await page3.$$(`td.x_support > strong`);
+                      console.log(boldTexts);
+                      let confirmationCodeTag = boldTexts[2];
+
+                      confirmationCode = await page3.evaluate(
+                        confirmationCodeTag => confirmationCodeTag.innerText,
+                        confirmationCodeTag
+                      );
+                      console.log(confirmationCode);
+                    }
+
+                    // go back twitter
+                    await page2.close();
+                    await page3.close();
+
+                    await page.bringToFront();
+
+                    await page.type('#challenge_response', confirmationCode);
+                    await confirmationChallengeBtn.click();
+                  } catch (error) {
+                    console.log(
+                      'oops something went wrong with challenge then'
+                    );
+                    console.log(error);
+                  }
+
+                  // try for already verified
+
+                  try {
+                    await page.waitForSelector(
+                      `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
+                    );
+                    console.log('seen tweet button time to tweet');
+                    io.sockets.emit('seenTweetButton', data);
+                  } catch (error) {
+                    console.log('no tweet button cannot go further');
+                  }
+                  // return;
+                  console.log('alirght then, time to tweet');
+
+                  // tweeting operation
+                  // await page.mouse.click(300, 400);
+                  await page.waitFor(randomNumber(2000, 4000));
+                  let numberOfRuns = 1;
+                  let twitterLinkArray = [];
+                  let inputString = data.baseLink;
+                  console.log(inputString, 'input string for ', email);
+                  await page.waitForSelector(
+                    `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
+                  );
+                  // const randomFileName = `tweetLink.csv`;
+
+                  let date = new Date();
+                  let randomFileName = `tweetNew.csv`;
+                  await fs.ensureFile(randomFileName);
+                  console.log('File ensured');
+
+                  let compose = await page.$(
+                    `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
+                  );
+                  // compose.click();
+                  // await page.click(0.5, 0.5);
+                  await page.mouse.click(0.5, 0.5);
+                  for (let j = 0; j < numberOfRuns; j++) {
+                    if (numberOfRuns % 9 === 0) {
+                      await page.waitFor(randomNumber(5000, 8000));
+                    }
+                    await page.waitForSelector(
+                      `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
+                    );
+
+                    await compose.click();
+                    await page.waitFor(randomNumber(1000, 2500));
+                    await page.waitForSelector(
+                      '.public-DraftStyleDefault-block'
+                    );
+                    await page.waitFor(randomNumber(1000, 3000));
+                    let word = `${inputString}${randomstring.generate(
+                      7
+                    )}${randomstring.generate(6)}`;
+                    for (let i = 0; i < word.length; i++) {
+                      let charCode = word.charCodeAt(i);
+                      await page.keyboard.press(String.fromCharCode(charCode));
+                      if (i === word.length - 1) {
+                        await page.waitFor(randomNumber(6000, 10000));
+                        await page.keyboard.down('Control');
+                        await page.keyboard.press(String.fromCharCode(13));
+                        await page.keyboard.up('Control');
+                        // await page.waitForNavigation();
+
+                        await page.waitForSelector(`[title='${word}']`);
+                        console.log('tweet sent');
+                        let link = '';
+                        try {
+                          link = await page.waitForSelector(
+                            `[title='${word}']`
+                          );
+                        } catch (error) {
+                          let verifiedUserToRegisterFailure = await VerifiedUserData.findOne(
+                            {
+                              email
+                            }
+                          );
+                          console.log(verifiedUserToRegisterFailure);
+                          verifiedUserToRegisterFailure.failures.push('fail');
+                          // return;
+                          await verifiedUserToRegisterFailure.save();
+                          console.log('failure registered');
+
+                          await browser.close();
+                          console.log('browser closed');
+                        }
+                        let tweetLink = '';
+                        tweetLink = await page.evaluate(link => {
+                          return link.getAttribute('href');
+                        }, link);
+                        try {
+                          let verifiedUser = await VerifiedUserData.findOne({
+                            email
+                          });
+                          console.log(verifiedUser);
+                          verifiedUser.tweetLinks.push(tweetLink);
+                          // return;
+                          await verifiedUser.save();
+
+                          console.log('saved link');
+                          console.log(tweetLink, 'seen');
+                        } catch (error) {
+                          console.log(error);
+                          console.log(
+                            'failed save.. okay.. gonna continue anyway'
+                          );
+                        }
+
+                        twitterLinkArray.push(tweetLink);
+                        await fs.appendFile(
+                          randomFileName,
+                          `"${word}","${tweetLink
+                            .replace('https://', '')
+                            .replace('?amp=1', '')}"\n`
+                        );
+                        let csvData = await readFile(randomFileName, {
+                          encoding: 'utf-8'
+                        });
+                        io.sockets.emit('tweetLinks', {
+                          ...data
+                        });
+
+                        if (j === numberOfRuns - 1) {
+                          console.log(twitterLinkArray);
+                          console.log('file saved');
+                          console.log('done');
+
+                          await browser.close();
+                        }
+                        // await page.reload();
+                      }
+                    }
+                  }
+                } catch (error) {
+                  console.log(error);
+                }
+                resPage();
+              })
+            );
+          }
+          await Promise.all(promisesPages);
+          await browser.close();
+
+          resBrowser();
+        })
+      );
+    }
+
+    await Promise.all(promisesBrowsers);
+    console.log(
+      `Time elapsed ${Math.round((new Date().getTime() - startDate) / 1000)} s`
+    );
+    io.sockets.emit('tweetEnd', {
+      ...data
+    });
+    console.log('waiting to start again');
+    try {
+      let verifiedUser = await VerifiedUserData.findOne({
+        email: data.email
+      });
+      verifiedUser.active = false;
+      // return;
+      await verifiedUser.save();
+      // console.log(verifiedUser, 'from end of tweet');
+    } catch (error) {
+      console.log(error);
+      console.log('not changed active state ... trying again');
+      let verifiedUser = await VerifiedUserData.findOne({
+        email
+      });
+      console.log(verifiedUser);
+      verifiedUser.active = false;
+      // return;
+      await verifiedUser.save();
+    }
+    setTimeout(async () => {
+      await startTweet(
+        data,
+        io,
+        puppeteer,
+        proxies,
+        shuffler,
+        prepareForTest,
+        fs
+      );
+    }, 20000);
+  })();
+};

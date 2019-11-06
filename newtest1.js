@@ -448,7 +448,7 @@ const myFunc = async emails => {
                       console.log(
                         'trying one more time and waiting for 60000 for message'
                       );
-                      await page.waitFor(40000);
+                      await page.waitFor(80000);
 
                       // get the code
                       const smsRes = await request.get(
@@ -747,7 +747,7 @@ const shouldUpdateEmail = async () => {
       `https://mobilesms.io/webapp/api?action=balance&key=${apiKeyMobileSMS}`
     );
     console.log(balance);
-    if (balance <= 0) return process.exit(1);
+    if (balance <= 3) return process.exit(1);
     const emails = await UserData.find({})
       .sort({ _id: 1 })
       .limit(2);

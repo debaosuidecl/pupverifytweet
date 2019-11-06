@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <link rel="stylesheet" href="./spinner.css" />
     <link rel="stylesheet" href="./main.css" />
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -26,19 +27,15 @@
 
     <h1 class="heading">Welcome To tweetlinks</h1>
     <div class="vContHeader"></div>
-    <div class="vCont"></div>
-
-    <div id="progressConsole">
-      <h3>Progress Console</h3>
-      <div id="consoleHeader">
-        <p
-          style="text-align: center; font-size: 24px; font-weight: 100; color: #bbb"
-        >
-          NO LINKS YET
-        </p>
+    <div class="vCont">
+      <div class="loaderCont">
+        <div class="lds-ripple">
+          <div></div>
+          <div></div>
+        </div>
       </div>
-      <div id="consoleBody"></div>
     </div>
+
     <script src="./mockcsv.js"></script>
     <script src="./helperFunc.js"></script>
     <script src="./testtweet.js"></script>

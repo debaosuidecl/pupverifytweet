@@ -102,15 +102,6 @@ io.on('connection', socket => {
       'http://meekandlowlyistheway.xyz?Domain=',
       'http://frenchfriesorfreedomfries.xyz?Domain=',
       'http://elementaldentaltoothache.xyz?Domain='
-
-      // 'http://onlythelonelyknow.xyz?Domain=',
-      // 'http://hexidecimal.xyz?Domain=',
-      // 'http://forbearance.xyz?Domain=',
-      // 'http://frictiontudallmighty.xyz?Domain='
-      // 'http://frictiontudallmighty.xyz?Domain=',
-      // 'http://serverencetoodee.xyz?Domain=',
-      // 'http://fallztrooths.xyz?Domain=',
-      // 'http://meetfallztrooths.xyz?Domain='
     ];
     io.sockets.emit('tweet', data);
     let emails;

@@ -8,6 +8,11 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+
+  tweetCount: {
+    type: Number,
+    default: 0
+  },
   twitterpassword: {
     type: String,
     required: true

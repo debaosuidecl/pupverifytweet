@@ -230,6 +230,7 @@ i[data-id='cancelService'] {
 }
 
 .userActionCont {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -264,9 +265,6 @@ i[data-id='cancelService'] {
 }
 .userDetails .email:nth-child(2) {
   color: blueviolet;
-}
-
-.userDetails {
 }
 
 .start,
@@ -304,4 +302,37 @@ i[data-id='cancelService'] {
 .count {
   font-size: 17px;
   font-weight: 100;
+}
+
+.statusCircle {
+  height: 13px;
+  width: 13px;
+  background: #bbb;
+  border-radius: 50%;
+  right: -5px;
+  top: -5px;
+  z-index: 1000;
+  position: absolute;
+  animation: statusOscillate 2.5s infinite;
+}
+
+.active {
+  background: greenyellow !important;
+}
+.loadingState {
+  background: gold;
+}
+.killed {
+  background: rgb(255, 0, 98);
+  animation: none;
+}
+
+@keyframes statusOscillate {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }

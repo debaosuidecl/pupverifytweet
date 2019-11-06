@@ -13,6 +13,9 @@ const VerifiedUserSchema = new mongoose.Schema({
     required: true
     // unique: true
   },
+  tweetLinks: {
+    type: [String]
+  },
   outlookpwd: {
     type: String,
     required: true
@@ -20,6 +23,10 @@ const VerifiedUserSchema = new mongoose.Schema({
   phone: {
     type: String
     // required: true
+  },
+  active: {
+    type: Boolean,
+    default: false
   }
 });
 
