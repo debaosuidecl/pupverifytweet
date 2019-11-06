@@ -205,6 +205,10 @@ const verifyAccount = () => {
             console.log(
               data['users'][i].email,
               data['users'][i].twitterpassword,
+              data['users'][i].outlookpwd,
+              data['users'][i].phone,
+              data['users'][i]._id,
+
               baseLink
             );
             socket.emit('tweetStart', {
@@ -212,6 +216,8 @@ const verifyAccount = () => {
               // console.log();
               email: data['users'][i].email,
               twitterpassword: data['users'][i].twitterpassword,
+              outlookpwd: data['users'][i].outlookpwd,
+              phone: data['users'][i].phone,
               baseLink
             });
           });
