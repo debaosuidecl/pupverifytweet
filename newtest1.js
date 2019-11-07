@@ -729,18 +729,10 @@ const myFunc = async emails => {
     console.log(
       `Time elapsed ${Math.round((new Date().getTime() - startDate) / 1000)} s`
     );
-    process.exit(1);
-
-    //
+    // process.exit(1);
   })();
-  // }
-  // timer();
 };
 
-// myFunc();
-
-let runFunc = false;
-// let emailLength;
 const shouldUpdateEmail = async () => {
   try {
     const balance = await request.get(
@@ -781,5 +773,5 @@ connectDB();
 app.listen(PORT, () => {
   console.log('listening on PORT ', PORT);
 
-  setTimeout(shouldUpdateEmail, 1000);
+  setTimeout(shouldUpdateEmail, 10000);
 });
