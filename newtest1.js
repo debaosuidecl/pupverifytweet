@@ -729,7 +729,7 @@ const myFunc = async emails => {
     console.log(
       `Time elapsed ${Math.round((new Date().getTime() - startDate) / 1000)} s`
     );
-    // process.exit(1);
+    process.exit(1);
   })();
 };
 

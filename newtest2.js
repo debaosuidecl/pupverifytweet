@@ -110,23 +110,17 @@ function requestCaptchaResults(apiKey, requestId) {
   };
 }
 
-// const prepareForTest = async page => {
-//   await page.evaluateOnNewDocument(() => {
-//     Object.defineProperty(navigator, 'webdriver', {
-//       get: () => false
-//     });
-//   });
-// };
-
 const timeout = millis => new Promise(resolve => setTimeout(resolve, millis));
 
 const myFunc = async emails => {
   // const {} = emails
   const NUM_BROWSERS = emails.length;
+  console.log(NUM_BROWSERS);
   const NUM_PAGES = 1;
   await (async () => {
     const startDate = new Date().getTime();
     const promisesBrowsers = [];
+
     for (let numBrowser = 0; numBrowser < NUM_BROWSERS; numBrowser++) {
       promisesBrowsers.push(
         new Promise(async resBrowser => {
@@ -134,6 +128,7 @@ const myFunc = async emails => {
             proxies[shuffler[numBrowser]]
           }`;
           console.log(proxies[shuffler[numBrowser]]);
+
           const browser = await puppeteer.launch({
             headless: false,
             ignoreHTTPSErrors: true,
@@ -737,13 +732,16 @@ const myFunc = async emails => {
           resBrowser();
         })
       );
+
+      console.log("let's go");
     }
+
     await Promise.all(promisesBrowsers);
 
     console.log(
       `Time elapsed ${Math.round((new Date().getTime() - startDate) / 1000)} s`
     );
-    process.exit(1);
+    // process.exit(1);
 
     //
   })();
@@ -760,7 +758,7 @@ const shouldUpdateEmail = async () => {
     const emails = await UserData.find({})
       .sort({ _id: 1 })
       .limit(2);
-    // console.log(emails);
+    console.log(emails, 'FROM SHOULD');
     const verifiedEmailsCount = await VerifiedUserData.countDocuments();
     console.log('verified emails count is ', verifiedEmailsCount);
     // console.log(emails);
