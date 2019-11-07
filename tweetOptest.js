@@ -123,6 +123,7 @@ const startTweet = async (
   function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
   }
+
   io.sockets.emit('tweet', data);
   const NUM_BROWSERS = 1;
   const NUM_PAGES = 1;
@@ -131,21 +132,18 @@ const startTweet = async (
       email: data.email
     });
     console.log(verifiedUser);
-    verifiedUser.active = true;
+    verifiedUser.active = true; // set active to true
+    verifiedUser.baseLink = data.baseLink;
+    verifiedUser.doNotRepeat = false; // take this back to the default setting
     // return;
     await verifiedUser.save();
   } catch (error) {
     console.log(error);
     console.log('not changed active state ... trying again');
-    await startTweet(
-      data,
-      io,
-      puppeteer,
-      proxies,
-      shuffler,
-      prepareForTest,
-      fs
-    );
+    return io.sockets.emit('tweetEnd', {
+      ...data,
+      message: 'Problem cannot find document'
+    });
   }
   await (async () => {
     const startDate = new Date().getTime();
@@ -208,7 +206,21 @@ const startTweet = async (
                   // return;
                   // try for confirmation
                   await page.setDefaultNavigationTimeout(30000);
-
+                  try {
+                    socket.on('stop', async dataToStop => {
+                      let verifiedUserToStop = await VerifiedUserData.findOne({
+                        email: dataToStop.email
+                      });
+                      verifiedUserToStop.doNotRepeat = true;
+                      await verifiedUserToStop.save();
+                      if (verifiedUserToStop.email === data.email) {
+                        await browser.close();
+                        io.sockets.emit('tweetEnd');
+                      }
+                    });
+                  } catch (error) {
+                    console.log('could not stop');
+                  }
                   try {
                     let retypePhoneIndicator = await page.waitForSelector(
                       `input[value="RetypePhoneNumber"]`
@@ -465,26 +477,29 @@ const startTweet = async (
     io.sockets.emit('tweetEnd', {
       ...data
     });
-    console.log('waiting to start again');
+    console.log('Checking whether to start again');
     try {
       let verifiedUser = await VerifiedUserData.findOne({
         email: data.email
       });
+      // change active state
       verifiedUser.active = false;
+
       // return;
       await verifiedUser.save();
-      // console.log(verifiedUser, 'from end of tweet');
+      if (verifiedUser.failures.length > 20) {
+        await VerifiedUserData.findOneAndDelete({ email: data.email });
+        return io.sockets.emit('deleteRecord', data);
+      }
+      if (verifiedUser.doNotRepeat) {
+        console.log('stopped');
+        return io.sockets.emit('tweetEnd');
+      }
     } catch (error) {
       console.log(error);
-      console.log('not changed active state ... trying again');
-      let verifiedUser = await VerifiedUserData.findOne({
-        email
-      });
-      console.log(verifiedUser);
-      verifiedUser.active = false;
-      // return;
-      await verifiedUser.save();
     }
+    console.log('start again');
+
     setTimeout(async () => {
       await startTweet(
         data,
@@ -495,6 +510,6 @@ const startTweet = async (
         prepareForTest,
         fs
       );
-    }, 20000);
+    }, 30000);
   })();
 };

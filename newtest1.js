@@ -747,14 +747,16 @@ const shouldUpdateEmail = async () => {
       `https://mobilesms.io/webapp/api?action=balance&key=${apiKeyMobileSMS}`
     );
     console.log(balance);
-    if (balance <= 3) return process.exit(1);
+    if (balance <= 3) {
+      return setTimeout(shouldUpdateEmail, 80000);
+    }
     const emails = await UserData.find({})
       .sort({ _id: 1 })
       .limit(2);
     // console.log(emails);
     const verifiedEmailsCount = await VerifiedUserData.countDocuments();
     console.log('verified emails count is ', verifiedEmailsCount);
-    // console.log(emails);
+
     if (verifiedEmailsCount < 10) {
       await myFunc(emails);
     } else {

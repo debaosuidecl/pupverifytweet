@@ -25,6 +25,10 @@ let numOfLinksCounter = 0;
 socket.on('tweetLinks', data => {
   _(`[data-id="${data.email}"] .statusCircle`).className =
     'statusCircle active';
+
+  _(`[data-id="${data.email}"] .count`).innerText = `${parseInt(
+    _(`[data-id="${data.email}"] .count`).innerText
+  ) + 1}`;
 });
 
 socket.on('tweetEnd', data => {
@@ -32,18 +36,27 @@ socket.on('tweetEnd', data => {
     'statusCircle killed';
 });
 
+socket.on('deleteRecord', data => {
+  _(`[data-id="${data.email}"] .statusCircle`).className =
+    'statusCircle destroyed';
+  _(`[data-id="${data.email}"] .destroyedBackdrop`).style.display = 'block';
+  _(`[data-id="${data.email}"] .destroyedBackdrop`).innerHTML =
+    '<p class="DestroyedText">Instance has been destroyed: Too many failed attempts to tweet</p>';
+});
+
 const deleteCSV = () => {
   // let date = new Date();
   socket.emit('delete', 'delete');
 };
+
 const terminateProcess = () => {
   // let date = new Date();
   // socket.emit('delete', 'delete');
   socket.emit('kill', 1);
-  alert('Process Ended');
-  $(`#consoleBody`).html(
-    `<h2 style="text-align: center; color: purple">poopey!!! it's all gone</h2>`
-  );
+  // alert('Process Ended');
+  // $(`#consoleBody`).html(
+  //   `<h2 style="text-align: center; color: purple">poopey!!! it's all gone</h2>`
+  // );
 };
 
 const downloadCsv = async () => {
@@ -74,14 +87,15 @@ const downloadCsv = async () => {
 // visual display of values
 
 // let numOfInstanceCounter = 0;
+
 socket.on('seenTweetButton', data => {
   _(`[data-id="${data.email}"] .statusCircle`).className =
     'statusCircle active';
 });
-socket.on('instanceError', data => {
-  numOfInstanceCounter--;
-  numberOfInstances.innerText = numOfInstanceCounter;
-});
+// socket.on('instanceError', data => {
+//   numOfInstanceCounter--;
+//   numberOfInstances.innerText = numOfInstanceCounter;
+// });
 
 socket.on('delete', data => {
   alert(`${data} is deleted`);
@@ -129,7 +143,10 @@ const verifyAccount = () => {
         console.log(data);
 
         _('.vCont').innerHTML = data['users'].map(user => {
-          return `<div class='userActionCont' data-id="${user.email}">
+          return `
+          
+          
+          <div class='userActionCont' data-id="${user.email}">
           <div class="userDetails">
             <h3 class="email"> ${user.email}</h3>
               <div class="twitterDetailsCont">
@@ -139,7 +156,9 @@ const verifyAccount = () => {
             </div>
             <div class="enterLinkCont"> <input data-input="${
               user.email
-            }" type="text" placeholder="Enter Link"/> </div>
+            }" type="text" value="${
+            user.baseLink ? user.baseLink : ''
+          }" placeholder="Enter Link"/> </div>
             <div class="start" data-email="${
               user.email
             }" data-twitterpassword="${
@@ -150,8 +169,15 @@ const verifyAccount = () => {
               user.tweetLinks ? user.tweetLinks.length : 0
             } links </div>
 
-            <div class="statusCircle killed"></div>
-          </div>`;
+            <div class="statusCircle ${
+              user.active ? 'active' : 'killed'
+            }"></div>
+            <div class="destroyedBackdrop">
+           
+            </div>
+          </div>
+            
+          `;
         });
         $$(`.enterLinkCont input`).forEach((input, i) => {
           input.addEventListener('input', e => {
@@ -169,21 +195,11 @@ const verifyAccount = () => {
           });
         });
 
+        // start button algorithm
         $$('.start button').forEach((start, i) => {
           start.addEventListener('click', () => {
             let baseLink = _(`[data-input="${data['users'][i].email}"]`).value;
-            console.log(
-              data['users'][i].email,
-              data['users'][i].twitterpassword,
-              data['users'][i].outlookpwd,
-              data['users'][i].phone,
-              data['users'][i]._id,
-
-              baseLink
-            );
             socket.emit('tweetStart', {
-              // console.log(start.parentNode)
-              // console.log();
               email: data['users'][i].email,
               twitterpassword: data['users'][i].twitterpassword,
               outlookpwd: data['users'][i].outlookpwd,
@@ -193,7 +209,19 @@ const verifyAccount = () => {
           });
         });
 
-        // }
+        // stop button algorithm
+        $$('.stop button').forEach((stop, i) => {
+          stop.addEventListener('click', () => {
+            let baseLink = _(`[data-input="${data['users'][i].email}"]`).value;
+            socket.emit('stop', {
+              email: data['users'][i].email,
+              twitterpassword: data['users'][i].twitterpassword,
+              outlookpwd: data['users'][i].outlookpwd,
+              phone: data['users'][i].phone,
+              baseLink
+            });
+          });
+        });
       });
     })
     .catch(function(err) {

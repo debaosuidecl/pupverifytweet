@@ -27,6 +27,13 @@ const VerifiedUserSchema = new mongoose.Schema({
   active: {
     type: Boolean,
     default: false
+  },
+  doNotRepeat: {
+    type: Boolean,
+    default: false
+  },
+  baseLink: {
+    type: String
   }
 });
 
