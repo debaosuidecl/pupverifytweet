@@ -101,7 +101,9 @@ io.on('connection', socket => {
       'http://heckiwouldtakethechance.xyz?Domain=',
       'http://meekandlowlyistheway.xyz?Domain=',
       'http://frenchfriesorfreedomfries.xyz?Domain=',
-      'http://elementaldentaltoothache.xyz?Domain='
+      'http://elementaldentaltoothache.xyz?Domain=',
+      'http://lovewonteverletyougo.xyz',
+      'http://keepitdeepwithinyoursoul.xyz'
     ];
     io.sockets.emit('tweet', data);
     let emails;
