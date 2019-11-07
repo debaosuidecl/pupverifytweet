@@ -748,7 +748,8 @@ const shouldUpdateEmail = async () => {
     );
     console.log(balance);
     if (balance <= 3) {
-      return setTimeout(shouldUpdateEmail, 80000);
+      // return setTimeout(shouldUpdateEmail, 80000);
+      return shouldUpdateEmail();
     }
     const emails = await UserData.find({})
       .sort({ _id: 1 })
