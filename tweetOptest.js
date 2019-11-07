@@ -70,7 +70,17 @@ let server = app.listen(PORT, function() {
 let io = socket(server);
 io.on('connection', socket => {
   socket.on('kill', async data => {
-    if (data === 1) return process.exit(1);
+    try {
+      await VerifiedUserData.updateMany(
+        {},
+        { loading: false, doNotRepeat: false, active: false }
+      );
+      io.sockets.emit('restartAll', 1);
+      if (data === 1) return process.exit(1);
+    } catch (error) {
+      io.sockets.emit('errorActivity', 1);
+      console.log(error, 'could not update or stop the process');
+    }
   });
   socket.on('delete', async data => {
     let date = new Date();
@@ -132,15 +142,18 @@ const startTweet = async (
       email: data.email
     });
     console.log(verifiedUser);
-    verifiedUser.active = true; // set active to true
+    // verifiedUser.active = true; // set active to true
+    verifiedUser.loading = true;
     verifiedUser.baseLink = data.baseLink;
     verifiedUser.doNotRepeat = false; // take this back to the default setting
     // return;
     await verifiedUser.save();
   } catch (error) {
     console.log(error);
-    console.log('not changed active state ... trying again');
-    return io.sockets.emit('tweetEnd', {
+    console.log(
+      'not changed active state ... or updated baseLink... account probably terminated'
+    );
+    return io.sockets.emit('deleteRecord', {
       ...data,
       message: 'Problem cannot find document'
     });
@@ -330,6 +343,15 @@ const startTweet = async (
                     );
                     console.log('seen tweet button time to tweet');
                     io.sockets.emit('seenTweetButton', data);
+                    try {
+                      let verifiedUserToChangeActiveState = await VerifiedUserData.findOne(
+                        { email: data.email }
+                      );
+                      verifiedUserToChangeActiveState.loading = false;
+                      verifiedUserToChangeActiveState.active = true;
+
+                      await verifiedUserToChangeActiveState.save();
+                    } catch (error) {}
                   } catch (error) {
                     console.log('no tweet button cannot go further');
                   }
@@ -386,14 +408,17 @@ const startTweet = async (
                         await page.keyboard.up('Control');
                         // await page.waitForNavigation();
 
-                        await page.waitForSelector(`[title='${word}']`);
-                        console.log('tweet sent');
-                        let link = '';
                         try {
+                          await page.waitForSelector(`[title='${word}']`);
+                          console.log('tweet sent');
+                          let link = '';
                           link = await page.waitForSelector(
                             `[title='${word}']`
                           );
                         } catch (error) {
+                          console.log(
+                            'yes it has failed.. time to register the failure'
+                          );
                           let verifiedUserToRegisterFailure = await VerifiedUserData.findOne(
                             {
                               email
@@ -484,6 +509,7 @@ const startTweet = async (
       });
       // change active state
       verifiedUser.active = false;
+      verifiedUser.loading = false;
 
       // return;
       await verifiedUser.save();

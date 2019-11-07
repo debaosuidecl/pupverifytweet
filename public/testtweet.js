@@ -49,16 +49,6 @@ const deleteCSV = () => {
   socket.emit('delete', 'delete');
 };
 
-const terminateProcess = () => {
-  // let date = new Date();
-  // socket.emit('delete', 'delete');
-  socket.emit('kill', 1);
-  // alert('Process Ended');
-  // $(`#consoleBody`).html(
-  //   `<h2 style="text-align: center; color: purple">poopey!!! it's all gone</h2>`
-  // );
-};
-
 const downloadCsv = async () => {
   try {
     const response = await fetch(`http://167.99.124.182:9808/download`, {
@@ -103,6 +93,19 @@ socket.on('delete', data => {
 socket.on('deleteError', data => {
   alert(`${data}`);
 });
+const terminateProcess = () => {
+  _('downloadRefreshLoader').style.display = 'block';
+  socket.emit('kill', 1);
+};
+socket.on('errorActivity', data => {
+  _('downloadRefreshLoader').style.display = 'none';
+});
+socket.on('restartAll', data => {
+  _('downloadRefreshLoader').style.display = 'none';
+  $$('.vCont .userActionCont .statusCircle').forEach(statusCircle => {
+    statusCircle.className = 'statusCircle killed';
+  });
+});
 
 const verifyAccount = () => {
   fetch(`http://167.99.124.182:9808/deleteAll`)
@@ -143,10 +146,7 @@ const verifyAccount = () => {
         console.log(data);
 
         _('.vCont').innerHTML = data['users'].map(user => {
-          return `
-          
-          
-          <div class='userActionCont' data-id="${user.email}">
+          return ` <div class='userActionCont' data-id="${user.email}">
           <div class="userDetails">
             <h3 class="email"> ${user.email}</h3>
               <div class="twitterDetailsCont">
@@ -170,7 +170,7 @@ const verifyAccount = () => {
             } links </div>
 
             <div class="statusCircle ${
-              user.active ? 'active' : 'killed'
+              user.loading ? 'loadingState' : user.active ? 'active' : 'killed'
             }"></div>
             <div class="destroyedBackdrop">
            

@@ -8,6 +8,10 @@ const VerifiedUserSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  loading: {
+    type: Boolean,
+    default: false
+  },
   twitterpassword: {
     type: String,
     required: true
@@ -34,6 +38,9 @@ const VerifiedUserSchema = new mongoose.Schema({
   },
   baseLink: {
     type: String
+  },
+  failures: {
+    type: [String]
   }
 });
 

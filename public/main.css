@@ -367,6 +367,40 @@ i[data-id='cancelService'] {
   text-align: right;
   /* background: green; */
 }
+.ButtonsCont {
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+  padding: 10px;
+}
+.ButtonsCont .refresh {
+  border: none;
+  color: white;
+  background: blueviolet;
+  padding: 10px;
+}
+.ButtonsCont .refresh:hover {
+  background: rgb(92, 30, 150);
+}
+.ButtonsCont .downloadCSV {
+  background: greenyellow;
+  border: none;
+  color: white;
+  padding: 10px;
+}
+
+.ButtonsCont .downloadCSV:hover {
+  background: rgb(124, 184, 33);
+}
+.downloadRefreshLoader {
+  display: none;
+}
+.showObject {
+  display: block;
+}
+.ButtonsCont .lds-ripple {
+  position: absolute;
+}
 @keyframes statusOscillate {
   0%,
   100% {

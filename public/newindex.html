@@ -26,6 +26,17 @@
     </nav>
 
     <h1 class="heading">Welcome To tweetlinks</h1>
+    <div class="ButtonsCont">
+      <button class="refresh" onclick="terminateProcess()">Refresh</button>
+
+      <button class="downloadCSV" onclick="downloadCsv()">Download CSV</button>
+      <div class="downloadRefreshLoader">
+        <div class="lds-ripple">
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
     <div class="vContHeader">
       <div class="statusHeaderCont">
         <div class="statusCircle active"></div>
