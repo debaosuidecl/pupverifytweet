@@ -96,24 +96,7 @@ io.on('connection', socket => {
         // if no error, file has been deleted successfully
       });
     }
-  }); await page.setDefaultNavigationTimeout(30000);
-  try {
-    socket.on('stop', async dataToStop => {
-      console.log('stopping');
-      let verifiedUserToStop = await VerifiedUserData.findOne({
-        email: dataToStop.email
-      });
-      verifiedUserToStop.doNotRepeat = true;
-      // verifiedUserToStop.doNotRepeat = true;
-      await verifiedUserToStop.save();
-      if (verifiedUserToStop.email === data.email) {
-        await browser.close();
-        io.sockets.emit('tweetEnd');
-      }
-    });
-  } catch (error) {
-    console.log('could not stop');
-  }
+  });
 
   console.log('made socket connection ', socket.id);
   socket.on('tweetStart', async data => {
@@ -186,7 +169,7 @@ const startTweet = async (
           }`;
           console.log(proxies[shuffler[numBrowser]]);
           const browser = await puppeteer.launch({
-            headless: true,
+            headless: false,
             ignoreHTTPSErrors: true,
             ignoreDefaultArgs: ['--enable-automation'],
             args: [
@@ -235,7 +218,8 @@ const startTweet = async (
                   console.log('logged in');
                   // return;
                   // try for confirmation
-                 
+                  await page.setDefaultNavigationTimeout(30000);
+
                   try {
                     let retypePhoneIndicator = await page.waitForSelector(
                       `input[value="RetypePhoneNumber"]`
