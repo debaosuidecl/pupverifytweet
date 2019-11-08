@@ -41,6 +41,10 @@ const VerifiedUserSchema = new mongoose.Schema({
   },
   failures: {
     type: [String]
+  },
+  offer: {
+    type: Number,
+    default: 1
   }
 });
 

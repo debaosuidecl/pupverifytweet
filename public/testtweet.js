@@ -1,6 +1,7 @@
 // Make connection
 
-let socket = io.connect('http://localhost:3900');
+let socket = io.connect('http://167.99.124.182:3900');
+// let socket = io.connect('http://localhost:3900');
 // let socket = io.connect('http://167.99.124.182:1900');
 
 // querySelectorFucntion
@@ -44,16 +45,37 @@ socket.on('deleteRecord', data => {
     '<p class="DestroyedText">Instance has been destroyed: Too many failed attempts to tweet</p>';
 });
 
-const deleteCSV = () => {
+const deleteCSV = offer => {
   // let date = new Date();
-  socket.emit('delete', 'delete');
+  socket.emit('delete', {
+    command: 'delete',
+    offer
+  });
+};
+const askDeleteCSV = offer => {
+  _('.modal').style.display = 'block';
+  _('.backdrop').style.display = 'block';
+  _('.modal').innerHTML = `
+    <div class="ButtonsCont"> 
+      <button onclick="deleteCSV(${offer})" class="DeleteOffer">Confirmation of Delete of Offer ${offer}</button>
+    </div>
+  `;
+};
+const removeModal = () => {
+  _('.modal').style.display = 'none';
+  _('.backdrop').style.display = 'none';
 };
 
-const downloadCsv = async () => {
+const downloadCsv = async offer => {
+  console.log(offer);
+  // return;
   try {
-    const response = await fetch(`http://167.99.124.182:9808/download`, {
-      method: 'GET'
-    });
+    const response = await fetch(
+      `http://167.99.124.182:9808/downloadnew?q=${offer}`,
+      {
+        method: 'GET'
+      }
+    );
     console.log(response);
     if (response.status === 200) {
       const blob = await response.blob();
@@ -94,14 +116,14 @@ socket.on('deleteError', data => {
   alert(`${data}`);
 });
 const terminateProcess = () => {
-  _('downloadRefreshLoader').style.display = 'block';
+  _('.downloadRefreshLoader').style.display = 'block';
   socket.emit('kill', 1);
 };
 socket.on('errorActivity', data => {
   _('downloadRefreshLoader').style.display = 'none';
 });
 socket.on('restartAll', data => {
-  _('downloadRefreshLoader').style.display = 'none';
+  _('.downloadRefreshLoader').style.display = 'none';
   $$('.vCont .userActionCont .statusCircle').forEach(statusCircle => {
     statusCircle.className = 'statusCircle killed';
   });
@@ -131,8 +153,8 @@ const verifyAccount = () => {
 };
 
 (async () => {
-  // fetch(`http://167.99.124.182:9808/getVerifiedAccounts`)
-  fetch(`http://localhost:9808/getVerifiedAccounts`)
+  fetch(`http://167.99.124.182:9808/getVerifiedAccounts`)
+    // fetch(`http://localhost:9808/getVerifiedAccounts`)
     .then(function(response) {
       if (response.status !== 200) {
         console.log(
@@ -159,16 +181,27 @@ const verifyAccount = () => {
             }" type="text" value="${
             user.baseLink ? user.baseLink : ''
           }" placeholder="Enter Link"/> </div>
+         
             <div class="start" data-email="${
               user.email
-            }" data-twitterpassword="${
-            user.twitterpassword
-          }"><button disabled="true"> Start </button> </div>
-            <div class="stop"> <button> Stop </button> </div>
+            }" data-twitterpassword="${user.twitterpassword}"><button ${
+            !user.baseLink ? 'disabled' : ''
+          }> Start </button> </div>
+            
+            
+            <div class="offerSelect" data-select="${user.email}">
+            <select>
+              <option ${user.offer === 1 ? 'selected' : ''} value="1">1</option>
+              <option  ${
+                user.offer === 2 ? 'selected' : ''
+              } value="2">2</option>
+              <option ${user.offer === 3 ? 'selected' : ''} 
+              value="3">3</option>
+            </select>
+            </div>
             <div class="count"> ${
               user.tweetLinks ? user.tweetLinks.length : 0
             } links </div>
-
             <div class="statusCircle ${
               user.loading ? 'loadingState' : user.active ? 'active' : 'killed'
             }"></div>
@@ -183,7 +216,6 @@ const verifyAccount = () => {
           input.addEventListener('input', e => {
             console.log('change', e.target.value);
             if (e.target.value.length <= 0) {
-              // console.log('blah');
               _(
                 `[data-email="${data['users'][i].email}"] button`
               ).disabled = true;
@@ -195,33 +227,50 @@ const verifyAccount = () => {
           });
         });
 
+        //select
+
+        $$(`.offerSelect select`).forEach((input, i) => {
+          input.addEventListener('change', e => {
+            console.log('change', e.target.value);
+
+            console.log(
+              _(`[data-select="${data['users'][i].email}"] select`).value
+            );
+          });
+        });
+
         // start button algorithm
         $$('.start button').forEach((start, i) => {
           start.addEventListener('click', () => {
             let baseLink = _(`[data-input="${data['users'][i].email}"]`).value;
+            let offer = _(`[data-select="${data['users'][i].email}"] select`)
+              .value;
+            // console.log(offer, 'this is the offer from start');
+            // return;
             socket.emit('tweetStart', {
               email: data['users'][i].email,
               twitterpassword: data['users'][i].twitterpassword,
               outlookpwd: data['users'][i].outlookpwd,
               phone: data['users'][i].phone,
-              baseLink
+              baseLink,
+              offer
             });
           });
         });
 
         // stop button algorithm
-        $$('.stop button').forEach((stop, i) => {
-          stop.addEventListener('click', () => {
-            let baseLink = _(`[data-input="${data['users'][i].email}"]`).value;
-            socket.emit('stop', {
-              email: data['users'][i].email,
-              twitterpassword: data['users'][i].twitterpassword,
-              outlookpwd: data['users'][i].outlookpwd,
-              phone: data['users'][i].phone,
-              baseLink
-            });
-          });
-        });
+        // $$('.stop button').forEach((stop, i) => {
+        //   stop.addEventListener('click', () => {
+        //     let baseLink = _(`[data-input="${data['users'][i].email}"]`).value;
+        //     socket.emit('stop', {
+        //       email: data['users'][i].email,
+        //       twitterpassword: data['users'][i].twitterpassword,
+        //       outlookpwd: data['users'][i].outlookpwd,
+        //       phone: data['users'][i].phone,
+        //       baseLink
+        //     });
+        //   });
+        // });
       });
     })
     .catch(function(err) {

@@ -4,11 +4,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <link rel="stylesheet" href="./spinner.css" />
     <link rel="stylesheet" href="./main.css" />
-    <script
+    <!-- <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
       crossorigin="anonymous"
-    ></script>
+    ></script> -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/en-gb.js"></script> -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,8 +16,10 @@
 
     <title>Tweet Link Generator</title>
   </head>
-  <script src="https://use.fontawesome.com/cfae4f8cb1.js"></script>
+  <!-- <script src="https://use.fontawesome.com/cfae4f8cb1.js"></script> -->
   <body>
+    <div onclick="removeModal()" class="backdrop"></div>
+    <div class="modal"></div>
     <nav class="navbar">
       <div class="logo">
         <h1>tweetlinks</h1>
@@ -27,9 +29,11 @@
 
     <h1 class="heading">Welcome To tweetlinks</h1>
     <div class="ButtonsCont">
-      <button class="refresh" onclick="terminateProcess()">Refresh</button>
+      <button class="refresh" onclick="terminateProcess()">Stop all</button>
 
-      <button class="downloadCSV" onclick="downloadCsv()">Download CSV</button>
+      <button class="downloadCSV" onclick="downloadCsv(1)">Get Offer 1</button>
+      <button class="downloadCSV" onclick="downloadCsv(2)">Get Offer 2</button>
+      <button class="downloadCSV" onclick="downloadCsv(3)">Get Offer 3</button>
       <div class="downloadRefreshLoader">
         <div class="lds-ripple">
           <div></div>
@@ -55,13 +59,24 @@
         <span>Account Terminated</span>
       </div>
     </div>
-    <div class="vCont">
+    <div class="vCont" style="overflow: hidden;">
       <div class="loaderCont">
         <div class="lds-ripple">
           <div></div>
           <div></div>
         </div>
       </div>
+    </div>
+    <div class="ButtonsCont">
+      <button class="DeleteOffer" onclick="askDeleteCSV(1)">
+        Delete Offer 1
+      </button>
+      <button class="DeleteOffer" onclick="askDeleteCSV(2)">
+        Delete Offer 2
+      </button>
+      <button class="DeleteOffer" onclick="askDeleteCSV(3)">
+        Delete Offer 3
+      </button>
     </div>
 
     <script src="./mockcsv.js"></script>

@@ -82,10 +82,9 @@ io.on('connection', socket => {
       console.log(error, 'could not update or stop the process');
     }
   });
-  socket.on('delete', async data => {
-    let date = new Date();
-    let randomFileName = `tweetLinknew.csv`;
-    if (data === 'delete') {
+  socket.on('delete', async dataDeleteInfo => {
+    let randomFileName = `tweetNew${dataDeleteInfo.offer}.csv`;
+    if (dataDeleteInfo.command === 'delete') {
       fs.unlink(randomFileName, function(err) {
         if (err) {
           io.sockets.emit('deleteError', 'File does not exist');
@@ -97,7 +96,24 @@ io.on('connection', socket => {
         // if no error, file has been deleted successfully
       });
     }
-  });
+  }); await page.setDefaultNavigationTimeout(30000);
+  try {
+    socket.on('stop', async dataToStop => {
+      console.log('stopping');
+      let verifiedUserToStop = await VerifiedUserData.findOne({
+        email: dataToStop.email
+      });
+      verifiedUserToStop.doNotRepeat = true;
+      // verifiedUserToStop.doNotRepeat = true;
+      await verifiedUserToStop.save();
+      if (verifiedUserToStop.email === data.email) {
+        await browser.close();
+        io.sockets.emit('tweetEnd');
+      }
+    });
+  } catch (error) {
+    console.log('could not stop');
+  }
 
   console.log('made socket connection ', socket.id);
   socket.on('tweetStart', async data => {
@@ -145,6 +161,7 @@ const startTweet = async (
     // verifiedUser.active = true; // set active to true
     verifiedUser.loading = true;
     verifiedUser.baseLink = data.baseLink;
+    verifiedUser.offer = data.offer;
     verifiedUser.doNotRepeat = false; // take this back to the default setting
     // return;
     await verifiedUser.save();
@@ -218,22 +235,7 @@ const startTweet = async (
                   console.log('logged in');
                   // return;
                   // try for confirmation
-                  await page.setDefaultNavigationTimeout(30000);
-                  try {
-                    socket.on('stop', async dataToStop => {
-                      let verifiedUserToStop = await VerifiedUserData.findOne({
-                        email: dataToStop.email
-                      });
-                      verifiedUserToStop.doNotRepeat = true;
-                      await verifiedUserToStop.save();
-                      if (verifiedUserToStop.email === data.email) {
-                        await browser.close();
-                        io.sockets.emit('tweetEnd');
-                      }
-                    });
-                  } catch (error) {
-                    console.log('could not stop');
-                  }
+                 
                   try {
                     let retypePhoneIndicator = await page.waitForSelector(
                       `input[value="RetypePhoneNumber"]`
@@ -371,7 +373,7 @@ const startTweet = async (
                   // const randomFileName = `tweetLink.csv`;
 
                   let date = new Date();
-                  let randomFileName = `tweetNew.csv`;
+                  let randomFileName = `tweetNew${data.offer}.csv`;
                   await fs.ensureFile(randomFileName);
                   console.log('File ensured');
 
@@ -536,6 +538,6 @@ const startTweet = async (
         prepareForTest,
         fs
       );
-    }, 30000);
+    }, 10000);
   })();
 };
