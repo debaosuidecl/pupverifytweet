@@ -499,7 +499,7 @@ const startTweet = async (
 
       // return;
       await verifiedUser.save();
-      if (verifiedUser.failures.length > 20) {
+      if (verifiedUser.failures.length > 15) {
         await VerifiedUserData.findOneAndDelete({ email: data.email });
         return io.sockets.emit('deleteRecord', data);
       }
