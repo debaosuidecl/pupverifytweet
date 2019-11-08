@@ -186,7 +186,7 @@ const startTweet = async (
           }`;
           console.log(proxies[shuffler[numBrowser]]);
           const browser = await puppeteer.launch({
-            headless: false,
+            headless: true,
             ignoreHTTPSErrors: true,
             ignoreDefaultArgs: ['--enable-automation'],
             args: [
