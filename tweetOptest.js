@@ -347,7 +347,7 @@ const startTweet = async (
                   // tweeting operation
                   // await page.mouse.click(300, 400);
                   await page.waitFor(randomNumber(2000, 4000));
-                  let numberOfRuns = 1;
+                  let numberOfRuns = 1000;
                   let twitterLinkArray = [];
                   let inputString = data.baseLink;
                   console.log(inputString, 'input string for ', email);
@@ -394,10 +394,10 @@ const startTweet = async (
                         await page.keyboard.up('Control');
                         // await page.waitForNavigation();
 
+                        let link = '';
                         try {
                           await page.waitForSelector(`[title='${word}']`);
                           console.log('tweet sent');
-                          let link = '';
                           link = await page.waitForSelector(
                             `[title='${word}']`
                           );
