@@ -191,6 +191,12 @@ const getAllAccounts = () => {
       // Examine the text in the response
       response.json().then(function(data) {
         console.log(data);
+        if (data['users'].length <= 0) {
+          _('.vCont').innerHTML = `<div class='emptyUsers'>
+              <h2 style="text-align: center">There are no verified Users</h2>
+            </div>`;
+          return;
+        }
 
         _('.vCont').innerHTML = data['users'].map(user => {
           return ` <div class='userActionCont' data-id="${user.email}">
