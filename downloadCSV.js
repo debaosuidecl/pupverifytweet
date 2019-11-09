@@ -1,4 +1,7 @@
 const express = require('express');
+const request = require('request-promise-native');
+const apiKeyMobileSMS = `b26b5a48c0f72eeeff426ace85c4255f`;
+
 const VerifiedUserData = require('./models/VerifiedUserData');
 const mongoose = require('mongoose');
 const connectDB = require('./config/db.js');
@@ -62,5 +65,16 @@ app.get('/getVerifiedAccounts', async (req, res) => {
       msg: 'failure',
       error
     });
+  }
+});
+
+app.get('/balanceOnSMS', async (req, res) => {
+  try {
+    const balance = await request.get(
+      `https://mobilesms.io/webapp/api?action=balance&key=${apiKeyMobileSMS}`
+    );
+    res.json({ balance });
+  } catch (error) {
+    res.status(400).json({ error });
   }
 });

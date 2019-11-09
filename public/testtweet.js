@@ -2,7 +2,7 @@
 
 let socket = io.connect('http://167.99.124.182:3900');
 // let socket = io.connect('http://localhost:3900');
-// let socket = io.connect('http://167.99.124.182:1900');
+// const apiKeyMobileSMS = `b26b5a48c0f72eeeff426ace85c4255f`;
 
 // querySelectorFucntion
 
@@ -151,8 +151,33 @@ const verifyAccount = () => {
       console.log('Fetch Error :-S', err);
     });
 };
+const fetchMobSMSBalance = async () => {
+  fetch(`http://167.99.124.182:9808/balanceOnSMS`)
+    // fetch(`http://localhost:9808/balanceOnSMS`)
 
-(async () => {
+    .then(function(response) {
+      if (response.status !== 200) {
+        console.log(
+          'Looks like there was a problem. Status Code: ' + response.status
+        );
+        return;
+      }
+
+      // Examine the text in the response
+      response.json().then(function(data) {
+        console.log(data);
+        _('.balanceNumber').innerHTML = parseFloat(data.balance).toFixed(2);
+        if (parseFloat(data.balance) < 3) {
+          _('.balanceNumber').style.color = 'red';
+        }
+        setTimeout(() => {
+          fetchMobSMSBalance();
+        }, 60000);
+      });
+    });
+};
+// `https://mobilesms.io/webapp/api?action=balance&key=${apiKeyMobileSMS}`
+const getAllAccounts = () => {
   fetch(`http://167.99.124.182:9808/getVerifiedAccounts`)
     // fetch(`http://localhost:9808/getVerifiedAccounts`)
     .then(function(response) {
@@ -276,4 +301,6 @@ const verifyAccount = () => {
     .catch(function(err) {
       console.log('Fetch Error :-S', err);
     });
-})();
+};
+getAllAccounts();
+fetchMobSMSBalance();

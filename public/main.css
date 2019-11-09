@@ -5,6 +5,15 @@ body {
   margin: 0;
   padding: 0;
 }
+.MobSMSBalanceCont {
+  color: white;
+}
+.balanceNumber {
+  color: greenyellow;
+}
+.MobSMSBalance {
+  font-size: 23px;
+}
 button {
   cursor: pointer;
   transition: 1s;
