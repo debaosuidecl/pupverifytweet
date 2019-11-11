@@ -217,6 +217,7 @@ const myFunc = async emails => {
                     // });
                     await page3.goto('https://outlook.live.com/mail/inbox');
                     await page3.waitFor(3000);
+                    let confirmationCode = '';
 
                     try {
                       await page3.waitForSelector(
@@ -230,13 +231,18 @@ const myFunc = async emails => {
 
                       await page3.waitForSelector(`td.x_support > strong`);
                       let boldTexts = await page3.$$(`td.x_support > strong`);
-                      console.log(boldTexts);
-                      let confirmationCodeTag = boldTexts[2];
-
-                      confirmationCode = await page3.evaluate(
-                        confirmationCodeTag => confirmationCodeTag.innerText,
-                        confirmationCodeTag
-                      );
+                      for (let i = 0; i < boldTexts.length; i++) {
+                        let confirmationCodeTag = boldTexts[i];
+                        // if (confirmationCodeTag.indexOf(' ') === -1) {
+                        let confirmationCodeCheck = await page3.evaluate(
+                          confirmationCodeTag => confirmationCodeTag.innerText,
+                          confirmationCodeTag
+                        );
+                        // }{}
+                        if (confirmationCodeCheck.indexOf(' ') === -1) {
+                          confirmationCode = confirmationCodeCheck;
+                        }
+                      }
                       console.log(confirmationCode);
                     } catch (error) {
                       console.log(error);
@@ -257,13 +263,18 @@ const myFunc = async emails => {
 
                       await page3.waitForSelector(`td.x_support > strong`);
                       let boldTexts = await page3.$$(`td.x_support > strong`);
-                      console.log(boldTexts);
-                      let confirmationCodeTag = boldTexts[2];
-
-                      confirmationCode = await page3.evaluate(
-                        confirmationCodeTag => confirmationCodeTag.innerText,
-                        confirmationCodeTag
-                      );
+                      for (let i = 0; i < boldTexts.length; i++) {
+                        let confirmationCodeTag = boldTexts[i];
+                        // if (confirmationCodeTag.indexOf(' ') === -1) {
+                        let confirmationCodeCheck = await page3.evaluate(
+                          confirmationCodeTag => confirmationCodeTag.innerText,
+                          confirmationCodeTag
+                        );
+                        // }{}
+                        if (confirmationCodeCheck.indexOf(' ') === -1) {
+                          confirmationCode = confirmationCodeCheck;
+                        }
+                      }
                       console.log(confirmationCode);
                     }
 

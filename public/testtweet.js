@@ -46,7 +46,7 @@ socket.on('deleteRecord', data => {
 });
 
 const deleteCSV = offer => {
-  // let date = new Date();
+
   socket.emit('delete', {
     command: 'delete',
     offer
