@@ -1,15 +1,15 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const VerifiedUserData = require('./models/VerifiedUserData');
-const mongoose = require('mongoose');
-const connectDB = require('./config/db.js');
-const puppeteer = require('puppeteer');
-const randomstring = require('randomstring');
-const fs = require('fs-extra');
-const fsOriginal = require('fs');
-const util = require('util');
+const VerifiedUserData = require("./models/VerifiedUserData");
+const mongoose = require("mongoose");
+const connectDB = require("./config/db.js");
+const puppeteer = require("puppeteer");
+const randomstring = require("randomstring");
+const fs = require("fs-extra");
+const fsOriginal = require("fs");
+const util = require("util");
 const readFile = util.promisify(fsOriginal.readFile);
-let socket = require('socket.io');
+let socket = require("socket.io");
 
 const returnRandom = () => {
   return Math.floor(Math.random() * 7000) + 3000;
@@ -17,10 +17,10 @@ const returnRandom = () => {
 
 const prepareForTest = async page => {
   await page.setUserAgent(
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36"
   );
   await page.evaluateOnNewDocument(() => {
-    Object.defineProperty(navigator, 'webdriver', {
+    Object.defineProperty(navigator, "webdriver", {
       get: () => false
     });
   });
@@ -68,29 +68,29 @@ let server = app.listen(PORT, function() {
 });
 
 let io = socket(server);
-io.on('connection', socket => {
-  socket.on('kill', async data => {
+io.on("connection", socket => {
+  socket.on("kill", async data => {
     try {
       await VerifiedUserData.updateMany(
         {},
         { loading: false, doNotRepeat: false, active: false }
       );
-      io.sockets.emit('restartAll', 1);
+      io.sockets.emit("restartAll", 1);
       if (data === 1) return process.exit(1);
     } catch (error) {
-      io.sockets.emit('errorActivity', 1);
-      console.log(error, 'could not update or stop the process');
+      io.sockets.emit("errorActivity", 1);
+      console.log(error, "could not update or stop the process");
     }
   });
-  socket.on('delete', async dataDeleteInfo => {
+  socket.on("delete", async dataDeleteInfo => {
     let randomFileName = `tweetNew${dataDeleteInfo.offer}.csv`;
-    if (dataDeleteInfo.command === 'delete') {
+    if (dataDeleteInfo.command === "delete") {
       fs.unlink(randomFileName, function(err) {
         if (err) {
-          io.sockets.emit('deleteError', 'File does not exist');
+          io.sockets.emit("deleteError", "File does not exist");
         } else {
-          io.sockets.emit('delete', randomFileName);
-          console.log('File deleted!');
+          io.sockets.emit("delete", randomFileName);
+          console.log("File deleted!");
         }
 
         // if no error, file has been deleted successfully
@@ -98,8 +98,8 @@ io.on('connection', socket => {
     }
   });
 
-  console.log('made socket connection ', socket.id);
-  socket.on('tweetStart', async data => {
+  console.log("made socket connection ", socket.id);
+  socket.on("tweetStart", async data => {
     // console.log(data.baseLink);
     console.log(data);
 
@@ -133,7 +133,7 @@ const startTweet = async (
     return Math.random() * (max - min) + min;
   }
 
-  io.sockets.emit('tweet', data);
+  io.sockets.emit("tweet", data);
   const NUM_BROWSERS = 1;
   const NUM_PAGES = 1;
   try {
@@ -156,11 +156,11 @@ const startTweet = async (
     verifiedUserToChangeDoNotRepeat.save();
     console.log(error);
     console.log(
-      'not changed active state ... or updated baseLink... account probably terminated'
+      "not changed active state ... or updated baseLink... account probably terminated"
     );
-    return io.sockets.emit('deleteRecord', {
+    return io.sockets.emit("deleteRecord", {
       ...data,
-      message: 'Problem cannot find document'
+      message: "Problem cannot find document"
     });
   }
   await (async () => {
@@ -176,10 +176,10 @@ const startTweet = async (
           const browser = await puppeteer.launch({
             headless: true,
             ignoreHTTPSErrors: true,
-            ignoreDefaultArgs: ['--enable-automation'],
+            ignoreDefaultArgs: ["--enable-automation"],
             args: [
               `-no-sandbox`,
-              '-disable-setuid-sandbox',
+              "-disable-setuid-sandbox",
               `--proxy-server=${oldProxyUrl}`
             ],
             slowMo: 60
@@ -206,7 +206,7 @@ const startTweet = async (
                   // return;
                   await prepareForTest(page);
                   await page.setDefaultNavigationTimeout(0);
-                  await page.goto('https://twitter.com/login');
+                  await page.goto("https://twitter.com/login");
 
                   await page.waitFor(5000);
                   await page.waitForSelector(
@@ -220,7 +220,7 @@ const startTweet = async (
                   await page.click(`button[type="submit"]`);
 
                   // await page.waitForNavigation();
-                  console.log('logged in');
+                  console.log("logged in");
                   // return;
                   // try for confirmation
                   await page.setDefaultNavigationTimeout(30000);
@@ -235,14 +235,14 @@ const startTweet = async (
                     await page.click(`[type="submit"]`);
                     // await page.type('#challenge_response', phone);
                   } catch (e) {
-                    console.log(e, 'no phone number to retype');
+                    console.log(e, "no phone number to retype");
                   }
 
                   try {
                     let confirmationChallengeBtn = await page.waitForSelector(
                       `input[value="TemporaryPassword"]`
                     );
-                    console.log(confirmationChallengeBtn, 'the confirmation');
+                    console.log(confirmationChallengeBtn, "the confirmation");
 
                     const page2 = await browser.newPage();
                     await page2.setDefaultNavigationTimeout(90000);
@@ -260,7 +260,7 @@ const startTweet = async (
                     await page2.waitForNavigation();
                     let page3 = await browser.newPage();
                     await prepareForTest(page3);
-                    await page3.goto('https://outlook.live.com/mail/inbox');
+                    await page3.goto("https://outlook.live.com/mail/inbox");
                     await page3.waitFor(3000);
                     try {
                       await page3.waitForSelector(
@@ -284,7 +284,7 @@ const startTweet = async (
                       console.log(confirmationCode);
                     } catch (error) {
                       console.log(error);
-                      console.log('not in focused');
+                      console.log("not in focused");
                       await page3.waitForSelector(
                         `[data-icon-name="MailLowImportance"]`
                       );
@@ -317,11 +317,11 @@ const startTweet = async (
 
                     await page.bringToFront();
 
-                    await page.type('#challenge_response', confirmationCode);
+                    await page.type("#challenge_response", confirmationCode);
                     await confirmationChallengeBtn.click();
                   } catch (error) {
                     console.log(
-                      'oops something went wrong with challenge then'
+                      "oops something went wrong with challenge then"
                     );
                     console.log(error);
                   }
@@ -336,7 +336,7 @@ const startTweet = async (
                     );
 
                     console.log(
-                      'the button from access asking us for verification again.... we gotta kill it!'
+                      "the button from access asking us for verification again.... we gotta kill it!"
                     );
 
                     let verifiedUserToKill = await VerifiedUserData.findOne({
@@ -344,46 +344,46 @@ const startTweet = async (
                     });
                     verifiedUserToKill.failures = [
                       ...verifiedUserToKill.failures,
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail',
-                      'fail'
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail",
+                      "fail"
                     ];
                     verifiedUserToKill.doNotRepeat = true;
 
                     verifiedUserToKill.save();
                     console.log(
-                      'the account was killed for asking for access again!!!'
+                      "the account was killed for asking for access again!!!"
                     );
                   } catch (e) {
-                    console.log('did not ask me to verify account again');
+                    console.log("did not ask me to verify account again");
                   }
 
                   try {
                     await page.waitForSelector(
                       `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
                     );
-                    console.log('seen tweet button time to tweet');
-                    io.sockets.emit('seenTweetButton', data);
+                    console.log("seen tweet button time to tweet");
+                    io.sockets.emit("seenTweetButton", data);
                     try {
                       let verifiedUserToChangeActiveState = await VerifiedUserData.findOne(
                         { email: data.email }
@@ -394,10 +394,10 @@ const startTweet = async (
                       await verifiedUserToChangeActiveState.save();
                     } catch (error) {}
                   } catch (error) {
-                    console.log('no tweet button cannot go further');
+                    console.log("no tweet button cannot go further");
                   }
                   // return;
-                  console.log('alirght then, time to tweet');
+                  console.log("alirght then, time to tweet");
 
                   // tweeting operation
                   // await page.mouse.click(300, 400);
@@ -405,14 +405,14 @@ const startTweet = async (
                   let numberOfRuns = 1000;
                   let twitterLinkArray = [];
                   let inputString = data.baseLink;
-                  console.log(inputString, 'input string for ', email);
+                  console.log(inputString, "input string for ", email);
                   await page.waitForSelector(
                     `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
                   );
 
                   let randomFileName = `tweetNew${data.offer}.csv`;
                   await fs.ensureFile(randomFileName);
-                  console.log('File ensured');
+                  console.log("File ensured");
 
                   let compose = await page.$(
                     `path[d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H9c.4 0 .8-.3.8-.8s-.5-.7-1-.7zm15-4.9v-.1h-.1c-.1 0-9.2 1.2-14.4 11.7-3.8 7.6-3.6 9.9-3.3 9.9.3.1 3.4-6.5 6.7-9.2 5.2-1.1 6.6-3.6 6.6-3.6s-1.5.2-2.1.2c-.8 0-1.4-.2-1.7-.3 1.3-1.2 2.4-1.5 3.5-1.7.9-.2 1.8-.4 3-1.2 2.2-1.6 1.9-5.5 1.8-5.7z"]`
@@ -430,7 +430,7 @@ const startTweet = async (
                     await compose.click();
                     await page.waitFor(randomNumber(1000, 2500));
                     await page.waitForSelector(
-                      '.public-DraftStyleDefault-block'
+                      ".public-DraftStyleDefault-block"
                     );
                     await page.waitFor(randomNumber(1000, 3000));
                     let word = `${inputString}${randomstring.generate(
@@ -441,21 +441,21 @@ const startTweet = async (
                       await page.keyboard.press(String.fromCharCode(charCode));
                       if (i === word.length - 1) {
                         await page.waitFor(randomNumber(6000, 10000));
-                        await page.keyboard.down('Control');
+                        await page.keyboard.down("Control");
                         await page.keyboard.press(String.fromCharCode(13));
-                        await page.keyboard.up('Control');
+                        await page.keyboard.up("Control");
                         // await page.waitForNavigation();
 
-                        let link = '';
+                        let link = "";
                         try {
                           await page.waitForSelector(`[title='${word}']`);
-                          console.log('tweet sent');
+                          console.log("tweet sent");
                           link = await page.waitForSelector(
                             `[title='${word}']`
                           );
                         } catch (error) {
                           console.log(
-                            'yes it has failed.. time to register the failure'
+                            "yes it has failed.. time to register the failure"
                           );
                           let verifiedUserToRegisterFailure = await VerifiedUserData.findOne(
                             {
@@ -463,17 +463,17 @@ const startTweet = async (
                             }
                           );
                           // console.log(verifiedUserToRegisterFailure);
-                          verifiedUserToRegisterFailure.failures.push('fail');
+                          verifiedUserToRegisterFailure.failures.push("fail");
                           // return;
                           await verifiedUserToRegisterFailure.save();
-                          console.log('failure registered');
+                          console.log("failure registered");
 
                           await browser.close();
-                          console.log('browser closed');
+                          console.log("browser closed");
                         }
-                        let tweetLink = '';
+                        let tweetLink = "";
                         tweetLink = await page.evaluate(link => {
-                          return link.getAttribute('href');
+                          return link.getAttribute("href");
                         }, link);
                         try {
                           let verifiedUser = await VerifiedUserData.findOne({
@@ -484,12 +484,12 @@ const startTweet = async (
                           // return;
                           await verifiedUser.save();
 
-                          console.log('saved link');
-                          console.log(tweetLink, 'seen');
+                          console.log("saved link");
+                          console.log(tweetLink, "seen");
                         } catch (error) {
                           console.log(error);
                           console.log(
-                            'failed save.. okay.. gonna continue anyway'
+                            "failed save.. okay.. gonna continue anyway"
                           );
                         }
 
@@ -497,20 +497,20 @@ const startTweet = async (
                         await fs.appendFile(
                           randomFileName,
                           `"${word}","${tweetLink
-                            .replace('https://', '')
-                            .replace('?amp=1', '')}"\n`
+                            .replace("https://", "")
+                            .replace("?amp=1", "")}"\n`
                         );
                         let csvData = await readFile(randomFileName, {
-                          encoding: 'utf-8'
+                          encoding: "utf-8"
                         });
-                        io.sockets.emit('tweetLinks', {
+                        io.sockets.emit("tweetLinks", {
                           ...data
                         });
 
                         if (j === numberOfRuns - 1) {
                           console.log(twitterLinkArray);
-                          console.log('file saved');
-                          console.log('done');
+                          console.log("file saved");
+                          console.log("done");
 
                           await browser.close();
                         }
@@ -537,10 +537,10 @@ const startTweet = async (
     console.log(
       `Time elapsed ${Math.round((new Date().getTime() - startDate) / 1000)} s`
     );
-    io.sockets.emit('tweetEnd', {
+    io.sockets.emit("tweetEnd", {
       ...data
     });
-    console.log('Checking whether to start again');
+    console.log("Checking whether to start again");
     try {
       let verifiedUser = await VerifiedUserData.findOne({
         email: data.email
@@ -551,18 +551,18 @@ const startTweet = async (
 
       // return;
       await verifiedUser.save();
-      if (verifiedUser.failures.length > 15) {
+      if (verifiedUser.failures.length > 19) {
         await VerifiedUserData.findOneAndDelete({ email: data.email });
-        return io.sockets.emit('deleteRecord', data);
+        return io.sockets.emit("deleteRecord", data);
       }
       if (verifiedUser.doNotRepeat) {
-        console.log('stopped');
-        return io.sockets.emit('tweetEnd');
+        console.log("stopped");
+        return io.sockets.emit("tweetEnd");
       }
     } catch (error) {
       console.log(error);
     }
-    console.log('start again');
+    console.log("start again");
 
     setTimeout(async () => {
       await startTweet(
