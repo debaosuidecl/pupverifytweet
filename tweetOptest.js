@@ -429,9 +429,11 @@ const startTweet = async (
 
                     await compose.click();
                     await page.waitFor(randomNumber(1000, 2500));
+                    // return;
                     await page.waitForSelector(
                       '.public-DraftStyleDefault-block'
                     );
+
                     await page.waitFor(randomNumber(1000, 3000));
                     let word = `${inputString}${randomstring.generate(
                       7
@@ -444,7 +446,6 @@ const startTweet = async (
                         await page.keyboard.down('Control');
                         await page.keyboard.press(String.fromCharCode(13));
                         await page.keyboard.up('Control');
-                        // await page.waitForNavigation();
 
                         let link = '';
                         try {
@@ -454,9 +455,11 @@ const startTweet = async (
                             `[title='${word}']`
                           );
                         } catch (error) {
+                          console.log(error);
                           console.log(
                             'yes it has failed.. time to register the failure'
                           );
+                          // return;
                           let verifiedUserToRegisterFailure = await VerifiedUserData.findOne(
                             {
                               email
@@ -498,7 +501,7 @@ const startTweet = async (
                           randomFileName,
                           `"${word}","${tweetLink
                             .replace('https://', '')
-                            .replace('?amp=1', '')}?gold"\n`
+                            .replace('?amp=1', '')}"\n`
                         );
                         let csvData = await readFile(randomFileName, {
                           encoding: 'utf-8'
