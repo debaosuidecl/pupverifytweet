@@ -498,7 +498,7 @@ const startTweet = async (
                           randomFileName,
                           `"${word}","${tweetLink
                             .replace('https://', '')
-                            .replace('?amp=1', '')}"\n`
+                            .replace('?amp=1', '')}?gold"\n`
                         );
                         let csvData = await readFile(randomFileName, {
                           encoding: 'utf-8'

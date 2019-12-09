@@ -57,7 +57,7 @@ function shuffle(array) {
 // const pluginProxy = require('puppeteer-extra-plugin-proxy');
 // add proxy plugin without proxy crendentials
 
-const proxies = [9463, 9464, 9465, 9466, 9467, 9468, 9469, 9470, 9471, 9472];
+const proxies = [1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1119, 1120];
 
 // get randomized indexes with shuffle
 
@@ -110,25 +110,30 @@ function requestCaptchaResults(apiKey, requestId) {
   };
 }
 
+// const prepareForTest = async page => {
+//   await page.evaluateOnNewDocument(() => {
+//     Object.defineProperty(navigator, 'webdriver', {
+//       get: () => false
+//     });
+//   });
+// };
+
 const timeout = millis => new Promise(resolve => setTimeout(resolve, millis));
 
 const myFunc = async emails => {
   // const {} = emails
   const NUM_BROWSERS = emails.length;
-  console.log(NUM_BROWSERS);
   const NUM_PAGES = 1;
   await (async () => {
     const startDate = new Date().getTime();
     const promisesBrowsers = [];
-
     for (let numBrowser = 0; numBrowser < NUM_BROWSERS; numBrowser++) {
       promisesBrowsers.push(
         new Promise(async resBrowser => {
-          const oldProxyUrl = `http://62.210.169.25:${
+          const oldProxyUrl = `http://195.154.161.11:${
             proxies[shuffler[numBrowser]]
           }`;
           console.log(proxies[shuffler[numBrowser]]);
-
           const browser = await puppeteer.launch({
             headless: false,
             ignoreHTTPSErrors: true,
@@ -226,9 +231,6 @@ const myFunc = async emails => {
 
                       await page3.waitForSelector(`td.x_support > strong`);
                       let boldTexts = await page3.$$(`td.x_support > strong`);
-                      console.log(boldTexts);
-
-                      // return
                       for (let i = 0; i < boldTexts.length; i++) {
                         let confirmationCodeTag = boldTexts[i];
                         // if (confirmationCodeTag.indexOf(' ') === -1) {
@@ -277,7 +279,6 @@ const myFunc = async emails => {
                     }
 
                     // go back twitter
-                    // return;
                     await page2.close();
                     await page3.close();
 
@@ -318,6 +319,7 @@ const myFunc = async emails => {
                   } catch (error) {
                     console.log(error);
                   }
+
                   try {
                     console.log('check for continue to twitter');
                     await page.waitForSelector(`[value="Continue to Twitter"]`);
@@ -410,7 +412,7 @@ const myFunc = async emails => {
                       await page.waitForSelector(`[name="verfication_code"]`);
                       await page.waitFor(60000);
                       console.log(phone, 'for code');
-                      await page.waitFor(60000);
+                      await page.waitFor(100000);
 
                       // get the code
                       const smsRes = await request.get(
@@ -457,7 +459,7 @@ const myFunc = async emails => {
                       console.log(
                         'trying one more time and waiting for 60000 for message'
                       );
-                      await page.waitFor(60000);
+                      await page.waitFor(80000);
 
                       // get the code
                       const smsRes = await request.get(
@@ -502,21 +504,6 @@ const myFunc = async emails => {
                       'seen tweet button, slight issue we have to transfer this record back'
                     );
 
-                    // data-testid="confirmationSheetConfirm"
-                    // name="verfication_code"
-                    // [role="button"]
-                    // let
-
-                    // return;
-                    // let verifiedUser = new VerifiedUserData({
-                    //   email,
-                    //   twitterpassword,
-                    //   outlookpwd
-                    // });
-                    // const newUser = await verifiedUser.save();
-                    // console.log(newUser, 'data saved');
-
-                    // await UserData.findOneAndRemove({ _id: _id });
                     console.log(newUser, ' is deleted');
                   } catch (error) {
                     try {
@@ -661,7 +648,7 @@ const myFunc = async emails => {
                       await page.waitForSelector(`#code`);
                       // enter the code
                       console.log(phone, 'for code');
-                      await page.waitFor(60000);
+                      await page.waitFor(110000);
 
                       // get the code
                       const smsRes = await request.get(
@@ -747,37 +734,34 @@ const myFunc = async emails => {
           resBrowser();
         })
       );
-
-      console.log("let's go");
     }
-
     await Promise.all(promisesBrowsers);
 
     console.log(
       `Time elapsed ${Math.round((new Date().getTime() - startDate) / 1000)} s`
     );
-    // process.exit(1);
-
-    //
+    process.exit(1);
   })();
-  // }
-  // timer();
 };
 
-// myFunc();
-
-let runFunc = false;
-// let emailLength;
 const shouldUpdateEmail = async () => {
   try {
+    const balance = await request.get(
+      `https://mobilesms.io/webapp/api?action=balance&key=${apiKeyMobileSMS}`
+    );
+    console.log(balance);
+    if (balance <= 3) {
+      return setTimeout(shouldUpdateEmail, 80000);
+      // return shouldUpdateEmail();
+    }
     const emails = await UserData.find({})
       .sort({ _id: 1 })
       .limit(2);
-    console.log(emails, 'FROM SHOULD');
+    // console.log(emails);
     const verifiedEmailsCount = await VerifiedUserData.countDocuments();
     console.log('verified emails count is ', verifiedEmailsCount);
-    // console.log(emails);
-    if (verifiedEmailsCount < 25) {
+
+    if (verifiedEmailsCount < 10) {
       await myFunc(emails);
     } else {
       console.log('nothing to verify');
@@ -791,7 +775,7 @@ const shouldUpdateEmail = async () => {
   } catch (error) {
     console.log(error);
     console.log('error');
-    setTimeout(shouldUpdateEmail, 1000);
+    setTimeout(shouldUpdateEmail, 10000);
   }
 };
 
@@ -800,5 +784,5 @@ connectDB();
 app.listen(PORT, () => {
   console.log('listening on PORT ', PORT);
 
-  setTimeout(shouldUpdateEmail, 1000);
+  setTimeout(shouldUpdateEmail, 10000);
 });
