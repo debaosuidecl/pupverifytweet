@@ -40,21 +40,31 @@ function shuffle(array) {
 }
 
 const proxies = [
-  9463,
-  9464,
-  9465,
-  9466,
-  9467,
-  9468,
-  9469,
-  9470,
-  9471,
-  9472,
-  9473,
-  9474,
-  9475,
-  9476,
-  9477
+  1111,
+  1112,
+  1113,
+  1114,
+  1115,
+  1116,
+  1117,
+  1118,
+  1119,
+  1120,
+  1121,
+  1122,
+  1123,
+  1124,
+  1125,
+  1126,
+  1127,
+  1128,
+  1129,
+  1130,
+  1131,
+  1132,
+  1133,
+  1134,
+  1135
 ];
 
 let shuffler = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
@@ -102,8 +112,8 @@ io.on('connection', socket => {
       'http://meekandlowlyistheway.xyz?Domain=',
       'http://frenchfriesorfreedomfries.xyz?Domain=',
       'http://elementaldentaltoothache.xyz?Domain=',
-      'http://lovewonteverletyougo.xyz',
-      'http://keepitdeepwithinyoursoul.xyz'
+      'http://lovewonteverletyougo.xyz?Domain=',
+      'http://keepitdeepwithinyoursoul.xyz?Domain='
     ];
     io.sockets.emit('tweet', data);
     let emails;
@@ -126,7 +136,7 @@ io.on('connection', socket => {
       for (let numBrowser = 0; numBrowser < NUM_BROWSERS; numBrowser++) {
         promisesBrowsers.push(
           new Promise(async resBrowser => {
-            const oldProxyUrl = `http://62.210.169.25:${
+            const oldProxyUrl = `http://195.154.161.11:${
               proxies[shuffler[numBrowser]]
             }`;
             console.log(proxies[shuffler[numBrowser]]);
