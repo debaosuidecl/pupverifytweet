@@ -432,7 +432,15 @@ const myFunc = async emails => {
                         console.error('no sms yet');
                         // throw 'No SMS YET';
                       }
-                      const verCode = sms.messages[0].message.substring(34, 40);
+                      // const verCode = sms.messages[0].message.substring(34, 40);
+                      const verCode = sms.messages[0].message
+                        .replace('.', '')
+                        .replace('.', '')
+                        .replace('.', '')
+                        .replace('.', '')
+                        .split(' ')
+                        .filter(x => !isNaN(x))
+                        .join(' ');
 
                       await page.type('[name="verfication_code"]', verCode);
                       // await page.click(`[type="submit"]`);
@@ -479,7 +487,15 @@ const myFunc = async emails => {
                         console.error('no sms yet');
                         // throw 'No SMS YET';
                       }
-                      const verCode = sms.messages[0].message.substring(34, 40);
+                      // const verCode = sms.messages[0].message.substring(34, 40);
+                      const verCode = sms.messages[0].message
+                        .replace('.', '')
+                        .replace('.', '')
+                        .replace('.', '')
+                        .replace('.', '')
+                        .split(' ')
+                        .filter(x => !isNaN(x))
+                        .join(' ');
                       await page.type('[name="verfication_code"]', verCode);
                       // await page.click(`[type="submit"]`);
                       await page.waitFor(`[role="button"]`);
@@ -668,8 +684,15 @@ const myFunc = async emails => {
                         console.error('no sms yet');
                         // throw 'No SMS YET';
                       }
-                      const verCode = sms.messages[0].message.substring(34, 40);
-
+                      // const verCode = sms.messages[0].message.substring(34, 40);
+                      const verCode = sms.messages[0].message
+                        .replace('.', '')
+                        .replace('.', '')
+                        .replace('.', '')
+                        .replace('.', '')
+                        .split(' ')
+                        .filter(x => !isNaN(x))
+                        .join(' ');
                       await page.type('#code', verCode);
                       await page.click(`[type="submit"]`);
 
@@ -702,8 +725,15 @@ const myFunc = async emails => {
                         console.error('no sms yet');
                         // throw 'No SMS YET';
                       }
-                      const verCode = sms.messages[0].message.substring(34, 40);
-
+                      // const verCode = sms.messages[0].message.substring(34, 40);
+                      const verCode = sms.messages[0].message
+                        .replace('.', '')
+                        .replace('.', '')
+                        .replace('.', '')
+                        .replace('.', '')
+                        .split(' ')
+                        .filter(x => !isNaN(x))
+                        .join(' ');
                       await page.type('#code', verCode);
                       await page.click(`[type="submit"]`);
 
