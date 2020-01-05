@@ -1,7 +1,7 @@
 // Make connection
 
-let socket = io.connect('http://167.99.124.182:3900');
-// let socket = io.connect('http://localhost:3900');
+// let socket = io.connect('http://167.99.124.182:3900');
+let socket = io.connect('http://localhost:3900');
 // const apiKeyMobileSMS = `b26b5a48c0f72eeeff426ace85c4255f`;
 
 // querySelectorFucntion
@@ -46,7 +46,6 @@ socket.on('deleteRecord', data => {
 });
 
 const deleteCSV = offer => {
-
   socket.emit('delete', {
     command: 'delete',
     offer
