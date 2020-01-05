@@ -379,9 +379,9 @@ const myFunc = async emails => {
 
                     console.log('start_phone_verification');
                     // return;
-                    await page.select('[aria-label="Country code"]', 'US');
+                    await page.select('[aria-label="Country code"]', 'GB');
                     const phoneRes = await request.get(
-                      `https://mobilesms.io/webapp/api?action=number&service=twitter&country=us&key=${apiKeyMobileSMS}`
+                      `https://mobilesms.io/webapp/api?action=number&service=twitter&country=uk&key=${apiKeyMobileSMS}`
                     );
                     console.log(phoneRes);
 
@@ -624,9 +624,9 @@ const myFunc = async emails => {
                       await page.waitForSelector(`#phone_number`);
 
                       console.log('start_phone_verification');
-                      await page.select('#country_code', '1');
+                      await page.select('#country_code', '44');
                       const phoneRes = await request.get(
-                        `https://mobilesms.io/webapp/api?action=number&service=twitter&country=us&key=${apiKeyMobileSMS}`
+                        `https://mobilesms.io/webapp/api?action=number&service=twitter&country=uk&key=${apiKeyMobileSMS}`
                       );
                       console.log(phoneRes);
 
